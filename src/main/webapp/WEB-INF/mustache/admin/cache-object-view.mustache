@@ -1,0 +1,77 @@
+{{</admin/admin-layout}}
+{{$subtitle}}View {{req.object}}{{/subtitle}}
+{{$sub}}{{#req}}{{>/admin/cache-subnav}}{{/req}}{{/sub}}
+{{$adminbody}}
+
+{{#req}}
+<style>
+
+table.attributes {
+  float:left;
+  margin-right: 10px;
+}
+
+</style>
+
+<h1>View {{object}}</h1>
+
+<table class="admin-table">
+<tr>
+  <th>Field</th><th>Value</th>
+</tr>
+<tbody id="fields">
+</tbody>
+</table>
+
+<br/>
+
+<table class="admin-table">
+<tr>
+  <th>Method</th><th colspan="2">Value</th>
+</tr>
+<tr>
+  <td>&nbsp;</td><td colspan="2" class="actions"><span class="anchor object-view-call-all">Invoke all get methods</a></td>
+</tr>
+<tbody id="methods">
+</tbody>
+</table>
+
+<br/>
+
+<table class="admin-table">
+<tr>
+  <th rowspan="2">Relation</th><th colspan="2"># Related Values</th>
+</tr>
+<tr>
+  <th align="right">Left</th><th align="right">Right</th>
+</tr>
+{{#relations}}
+<tr>
+<td class="item">
+  <a href="{{baseUri}}cache/relation-view?relation={{tableName}}">{{tableName}}</a>
+</td>
+<td class="numeric">{{leftSize}}</td>
+<td class="numeric">{{rightSize}}</td>
+</tr>
+{{/relations}}
+</table>
+
+<div style="clear: both"></div>
+
+{{/req}}
+
+{{/adminbody}}
+{{$adminjs}}
+<script src="{{app.path.js}}basicadmin/element-builder.js"></script>
+<script src="{{app.path.js}}basicadmin/cache-object-view.js"></script>
+{{#req}}
+<script>
+ObjectView.init(
+  "{{baseUri}}/cache/object-call?cid={{className}}&id={{objectId}}",
+  {{{fieldsJson}}},
+  {{{methodsJson}}}
+);
+</script>
+{{/req}}
+{{/adminjs}}
+{{//admin/admin-layout}}

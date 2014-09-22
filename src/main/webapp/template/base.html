@@ -1,0 +1,55 @@
+<div class="center-column">
+<header>
+  <nav class="top-nav">
+    {{#if currentUser}}
+    <span class="top-right-nav">
+      <span class="current-user-details">
+        <span class="current-user-alias">{{currentUser.userUsername}}</span>
+      </span>
+      <a href="/logout">Logout</a>
+    </span>
+    {{#keyExists}}
+    <a href="/home"{{#homePage}} class="active"{{/homePage}}>Home</a>
+    {{/keyExists}}
+    <a href="/profile"{{#profilePage}} class="active"{{/profilePage}}>Profile</a>
+    {{#keyExists}}
+    <a href="/friends"{{#friendsPage}} class="active"{{/friendsPage}}>Friends</a>
+    {{/keyExists}}
+    {{else}}
+    <span class="top-right-nav">
+      <a href="/login">Login</a>
+    </span>
+    <a href="/home"{{#homePage}} class="active"{{/homePage}}>Home</a>
+    {{/if}}
+  </nav>
+</header>
+<div class="content-column">
+<div class="contentcontainer">
+
+{{> body}}
+
+</div>
+</div>
+
+<footer>
+  <ul id="footer">
+    <li>
+      <h3>Copyright &amp; Usage</h3>
+      <nav class="bottom-nav">
+        <a href="/copyright">Copyright</a>
+      </nav>
+    </li>
+    <li>
+      <h3>Resources</h3>
+      <nav class="bottom-nav">
+        <a href="/faq">FAQ</a>
+      </nav>
+    </li>
+    <li>
+      <h3>Learning</h3>
+      <nav class="bottom-nav">
+        <a href="#">Learning</a>
+      </nav>
+    </li>
+  </ul>
+</footer>

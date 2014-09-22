@@ -1,0 +1,59 @@
+{{</admin/admin-layout}}
+{{$subtitle}}CPU Usage Monitoring{{/subtitle}}
+{{$sub}}{{#req}}{{>/admin/monitor-subnav}}{{/req}}{{/sub}}
+{{$adminjs}}<script type="text/javascript">
+
+var samples = {{#req}}{{{samples}}}{{/req}};
+
+function render(samples) {
+  var content = "";
+  for (var i in samples) {
+    content += "<tr><td class='item'>" + samples[i].name + "</td>";
+    content += "<td class='numeric'>" + samples[i].id + "</td>";
+    content += "<td class='numeric'>" + samples[i].ms + " ms</td>";
+    content += "<td class='numeric'>" + samples[i].usage + " %</td>";
+    content += "<td class='actions'><a href='{{req.baseUri}}/system/thread-view?id=" + samples[i].id + "'>View</a></td></tr>";
+  }
+
+  $("tbody#data").html(content);
+}
+
+function refresh() {
+  var checked = $("input#refr:checked").length;
+  if (checked == 1) {
+    $.ajax({
+      url: "{{baseUri}}/monitor/cpu?mode=1",
+      dataType: 'json',
+      type: 'get',
+      data: {},
+      success: function(data) {
+        render(data.samples);
+      }
+    });
+    setTimeout(refresh, 1000);
+  }
+}
+
+render(samples);
+refresh();
+</script>{{/adminjs}}
+{{$adminbody}}
+
+{{#req}}
+<h2>CPU Usage Monitoring</h2>
+
+<table class="admin-table">
+<tr>
+  <th>Name</th>
+  <th class="numeric">ID</th>
+  <th class="numeric">CPU ms</th>
+  <th class="numeric">CPU %</th>
+  <th>Actions</th>
+</tr>
+<tbody id="data"></tbody>
+</table>
+
+{{/req}}
+
+{{/adminbody}}
+{{//admin/admin-layout}}

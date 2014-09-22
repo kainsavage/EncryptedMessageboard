@@ -1,0 +1,35 @@
+{{</admin/admin-layout}}
+{{$subtitle}}User Edit{{/subtitle}}
+{{$sub}}{{#req}}{{>/admin/user-subnav}}{{/req}}{{/sub}}
+{{$auxCss}}<link rel="stylesheet" href="{{app.path.css}}basicadmin/admin-dashboard.css" />{{/auxCss}}
+{{$adminjs}}{{>/admin/custom/user-edit-script}}{{/adminjs}}
+{{$adminbody}}
+
+<h2>User Edit</h2>
+
+{{>/admin/include-validation}}
+{{#req}}
+{{#form}}
+<form id="EditUserForm" action="{{baseUri}}/users/user-edit" method="post" autocomplete="off">
+  <div class="admin-form">
+  {{#map}}
+    {{{id}}}
+    {{{nonce}}}
+    <div class="row"><label for="newun">Username</label>{{{newun}}}</div>
+    <div class="row"><label for="newpw">Password</label>{{{newpw}}}</div>
+    <div class="row"><label for="enabled">Enabled</label>{{{enabled}}}</div>
+    <div class="row wl"><label for="newem">Email Address</label>{{{newem}}}</div>
+    <div class="row"><label for="first">First Name</label>{{{first}}}</div>
+    <div class="row"><label for="last">Last Name</label>{{{last}}}</div>
+    <div class="row ws"><label for="lastlogin">Last Login</label>{{{lastlogin}}}</div>
+    {{>/admin/custom/user-edit-form}}
+    <div class="actions">{{{save}}}</div>
+  {{/map}}
+  </div>
+</form>
+{{/form}}
+
+{{/req}}
+
+{{/adminbody}}
+{{//admin/admin-layout}}

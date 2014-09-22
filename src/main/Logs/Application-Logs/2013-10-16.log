@@ -1,0 +1,86 @@
+EM 16Oct2013 09:02:00 logf: Log successfully configured.
+EM 16Oct2013 09:02:00 cach: Registering CacheGroup [Message]
+EM 16Oct2013 09:02:00 gemi: EncryptedMessageboard 0.01.00 (Gemini 1.3.7) build 2013-10-15 10:35:05
+EM 16Oct2013 09:02:00 gemi: Java HotSpot(TM) 64-Bit Server VM (v23.25-b01)
+EM 16Oct2013 09:02:00 gemi: Windows 7 (v6.1; amd64)
+EM 16Oct2013 09:02:00 gemi: Servlet Container: Resin/4.0.26
+EM 16Oct2013 09:02:00 gemi: JVM memory: 308Mb; free: 241Mb
+EM 16Oct2013 09:02:00 gemi: EncryptedMessageboard initializing.
+EM 16Oct2013 09:02:00 conf: Configuring EncryptedMessageboard application.
+EM 16Oct2013 09:02:00 conf: Using default configuration file(s): EncryptedMessageboard.conf,EncryptedMessageboard-DJIBOUTI.conf
+EM 16Oct2013 09:02:00 conf: Read EncryptedMessageboard-DJIBOUTI.conf
+EM 16Oct2013 09:02:00 conf: Read EncryptedMessageboard-Dev.conf
+EM 16Oct2013 09:02:00 conf: Read EncryptedMessageboard-Base.conf
+EM 16Oct2013 09:02:00 conf: Read EncryptedMessageboard-Version.conf
+EM 16Oct2013 09:02:00 logf: Log successfully configured.
+EM 16Oct2013 09:02:00 gemi: Property "StartupMailRecipients" is deprecated.
+EM 16Oct2013 09:02:00 gemi: Property "StartupMailAuthor" is deprecated.
+EM 16Oct2013 09:02:00 conf: Configuring 24 Configurables.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.feature.BasicFeatureManager@6783c8a.
+EM 16Oct2013 09:02:00 fMgr: Configuring features.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.admin.notification.Notifier@3fce8b57.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.admin.notification.listener.EmailNotificationListener@762375bf.
+EM 16Oct2013 09:02:00 emNL: 1: Recipient [kain@teamclerks.net; ; 0]
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.monitor.GeminiMonitor@3dff7c3e.
+EM 16Oct2013 09:02:00 Moni: Health snapshots: 120 at 300000ms intervals.
+EM 16Oct2013 09:02:00 Moni: Session snapshots: 120 at 300000ms intervals.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.monitor.session.SessionState@7e73382c.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.BasicInfrastructure@3e6d118f.
+EM 16Oct2013 09:02:00 infr: JSPPhysicalDirectory should end with a trailing slash or backslash.
+EM 16Oct2013 09:02:00 conf: Configuring [Scheduler: 0 event(s)].
+EM 16Oct2013 09:02:00 schd: Sleep time set to 10 seconds.
+EM 16Oct2013 09:02:00 schd: Scheduler enabled.
+EM 16Oct2013 09:02:00 conf: Configuring CachingSecurity [u:839511213].
+EM 16Oct2013 09:02:00 secu: Loaded BCrypt Password Cryptographer.
+EM 16Oct2013 09:02:00 conf: Configuring LoginTokenManager{databaseTableName=logintoken, cookieSecure=true, maxTokensPerUser=50, purgeEventEnabled=true, purgeEventMaxTokenAgeInDays=100, purgeEventIntervalInDays=5, purgeEventHour=5, purgeEventMinute=30}.
+EM 16Oct2013 09:02:00 schd: [com.techempower.gemini.pyxis.LoginTokenManager$PurgeEvent: 2013-10-21 05:30:00.000] scheduled for 2013-10-21 05:30:00
+EM 16Oct2013 09:02:00 auth: Configured LoginTokenManager{databaseTableName=logintoken, cookieSecure=true, maxTokensPerUser=50, purgeEventEnabled=true, purgeEventMaxTokenAgeInDays=100, purgeEventIntervalInDays=5, purgeEventHour=5, purgeEventMinute=30}
+EM 16Oct2013 09:02:00 conf: Configuring EmailTemplater [1922229419].
+EM 16Oct2013 09:02:00 emtm: 1 e-mail loaded.
+EM 16Oct2013 09:02:00 emtm: E-mail author: kain@teamclerks.net
+EM 16Oct2013 09:02:00 conf: Configuring EmailTransport [0 servers; 899281125].
+EM 16Oct2013 09:02:00 emxp: Outbound email disabled.  Server definitions are still processed to permit inbound email as needed.
+EM 16Oct2013 09:02:00 emxp: 0 mail servers specified, shown below.
+EM 16Oct2013 09:02:00 conf: Configuring EmailServicer [0 sent; 0 queued; 0 removed; 0 pending].
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.mustache.MustacheManager@d9665e1.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.mustache.TemplateAppReferences@cfa9dbf.
+EM 16Oct2013 09:02:00 conf: Configuring net.teamclerks.em.api.handler.PasswordResetHandler@198a6d41.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.exceptionhandler.BasicExceptionHandler@4f0ad380.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.exceptionhandler.NotificationExceptionHandler@4fc3a10a.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.session.HttpSessionManager@3481c06f.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.simulation.SimSessionManager@3280d257.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.cluster.client.ClusterClient@277167a8.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.data.jdbc.BasicConnectorFactory@64c5ad3.
+EM 16Oct2013 09:02:00 jdCA: Loading JDBC driver: com.mysql.jdbc.Driver
+EM 16Oct2013 09:02:00 cnfc: Configured using "db." prefix.
+EM 16Oct2013 09:02:00 cnfc: Database connect string: localhost/em
+EM 16Oct2013 09:02:00 cnfc: Database connection pool size: 5 to 30.
+EM 16Oct2013 09:02:00 cnfc: Database timers: 600000ms until stale; 3600000ms until abort.
+EM 16Oct2013 09:02:00 dbcl: No dbconn listener alert log file specified.
+EM 16Oct2013 09:02:00 jdCA: Establishing database connection: [jdbc:mysql://localhost/em, em]
+EM 16Oct2013 09:02:00 jdCA: JDBC Connection Manager thread started (sleep period 12000ms).
+EM 16Oct2013 09:02:00 jdCA: Establishing database connection: [jdbc:mysql://localhost/em, em]
+EM 16Oct2013 09:02:00 jdCA: Establishing database connection: [jdbc:mysql://localhost/em, em]
+EM 16Oct2013 09:02:00 jdCA: Establishing database connection: [jdbc:mysql://localhost/em, em]
+EM 16Oct2013 09:02:00 jdCA: Establishing database connection: [jdbc:mysql://localhost/em, em]
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.BasicUrlRewriter@1460d4b0.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.cache.EntityStore@612b7943.
+EM 16Oct2013 09:02:00 conf: Configuring com.techempower.gemini.internationalization.GeminiLocaleManager@6d264f8b.
+EM 16Oct2013 09:02:00 rMgr: Resources location: C:\Development\EncryptedMessageboard\src\main\webapp\WEB-INF\internationalization\
+EM 16Oct2013 09:02:00 conf: Done configuring Configurables.
+EM 16Oct2013 09:02:00 conf: Configuration complete.
+EM 16Oct2013 09:02:00 gemi: Evaluating initialization state.
+EM 16Oct2013 09:02:00 gemi: Running test query: SELECT 1 AS Result
+EM 16Oct2013 09:02:00 jdCA: Establishing database connection: [jdbc:mysql://localhost/em, em]
+EM 16Oct2013 09:02:00 gemi: EncryptedMessageboard (Development/DJIBOUTI) post-initializing.
+EM 16Oct2013 09:02:00 gemi: Initializing cache.
+EM 16Oct2013 09:02:00 cach: Registering CacheGroup [Group]
+EM 16Oct2013 09:02:00 cach: Registering CacheGroup [User]
+EM 16Oct2013 09:02:00 gemi: EncryptedMessageboard (Development/DJIBOUTI) starting asynchronous resources.
+EM 16Oct2013 09:02:00 sthr: Scheduler thread started [EncryptedMessageboard; 1106050188].
+EM 16Oct2013 09:02:00 entu: Starting entity updater thread.
+EM 16Oct2013 09:02:00 Moni: GeminiMonitorThread starting.
+EM 16Oct2013 09:02:00 clus: Not starting ClusterClient threads because no valid Transport is available.
+EM 16Oct2013 09:02:00 cpup: GeminiMonitor CPU Percentage Thread starting.
+EM 16Oct2013 09:02:00 emxp: Outbound email disabled.
+EM 16Oct2013 09:02:00 data: none - 1 - com.mysql.jdbc.JDBC4PreparedStatement@5af874ca: SELECT * FROM  message ;

@@ -1,0 +1,26 @@
+{{</admin/admin-layout}}
+{{$subtitle}}Menu{{/subtitle}}
+{{$sub}}{{/sub}}
+{{$adminbody}}
+<h2>Administration Menu</h2>
+
+<ul class="admin-menu">
+{{#req.menu}}
+<li class="admin-menu-section">
+  <div class="admin-menu-banner">{{description}}<div class="admin-menu-accent">{{name}}</div></div>
+  <div class="admin-menu-options">
+    <table border="0" cellpadding="0" cellspacing="0">
+      {{#functions}}
+      <tr>
+        <td class="admin-menu-option-name"><a class="admin-menu-button" href="{{req.baseUri}}{{relativeUri}}">{{functionName}}</a></td>
+        <td class="admin-menu-option-description">{{functionDescription}}</td>
+      </tr>
+      {{/functions}}
+    </table>
+  </div>
+</li>
+{{/req.menu}}
+</ul>
+
+{{/adminbody}}
+{{//admin/admin-layout}}

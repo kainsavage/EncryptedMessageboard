@@ -1,0 +1,13 @@
+<div class="fn {{#enabled}}enabled{{/enabled}}{{^enabled}}disabled{{/enabled}}">
+  <div class="fnn">{{key}}</div>
+  <div class="fnd">{{description}}</div>
+  <div class="fnctrl">
+    <a class="enable{{#enabled}} sel{{/enabled}}" href="javascript:enable('{{key}}')">Enable{{#enabled}}d{{/enabled}}</a>
+    <a class="disable{{^enabled}} sel{{/enabled}}" href="javascript:disable('{{key}}')">Disable{{^enabled}}d{{/enabled}}</a>
+  </div>
+</div>
+{{#children}}
+<div class="fnc {{#enabled}}enabled{{/enabled}}{{^enabled}}disabled{{/enabled}}">
+{{>/admin/features/config-feature}}
+</div>
+{{/children}}
