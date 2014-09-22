@@ -10,3 +10,5 @@ Thread Dumps/
 .settings/
 .classpath
 .project
+bin/
+target/
