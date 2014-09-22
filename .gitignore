@@ -1,0 +1,12 @@
+src/main/webapp/WEB-INF/classes/
+src/main/webapp/WEB-INF/work/
+src/main/webapp/css/min/
+src/main/webapp/js/min/
+src/main/webapp/Logs/
+jdbc-alerts.log
+Thumbs.db
+resin-data
+Thread Dumps/
+.settings/
+.classpath
+.project
