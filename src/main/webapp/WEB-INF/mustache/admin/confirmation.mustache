@@ -1,0 +1,22 @@
+{{</admin/admin-layout}}
+{{$subtitle}}Confirm {{message}}{{/subtitle}}
+{{$sub}}{{#req}}{{/req}}{{/sub}}
+{{$adminbody}}
+
+{{#req}}
+<table width="100%"><tr><td align="center">
+<div class="admin-confirm severity{{severity}}">
+  <div class="admin-confirm-banner">Confirmation Required</div>
+  <div class="admin-confirm-action">{{{message}}}</div>
+  {{#auxMessage}}<div class="auxmessage">{{{.}}}</div>{{/auxMessage}}
+  <div class="admin-confirm-desc">
+    The action you have requested requires your active confirmation.  Please click the link below the confirm your request to {{{message}}}.
+  </div>
+  <div class="admin-confirm-link"><a href="{{ confirm }}">Confirm Action</a></div>
+</div>
+</td></tr></table>
+</table>
+{{/req}}
+
+{{/adminbody}}
+{{//admin/admin-layout}}

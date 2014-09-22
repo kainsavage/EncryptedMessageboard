@@ -1,0 +1,113 @@
+<!--
+    
+    Ant build script for EncryptedMessageboard.  Running this script produces a .zip archive
+    with the following structure:
+
+    EncryptedMessageboard-yyyy-MM-dd.zip
+    |~ EncryptedMessageboard.war
+    |~ Source
+    |~~~ (The current source code of EncryptedMessageboard and Gemini.)
+    
+-->
+<project default="build-zip" name="EncryptedMessageboard">
+
+  <!-- Give user a chance to override default properties by including a
+       build.properties file. -->
+  <property file="build.properties"/>
+
+  <!-- Import environment variables. -->
+  <property environment="Environment" />
+
+  <!-- Properties are immutable, and can only be set once.  So setting
+       default values for these properties after loading the build.properties
+       file will only set properties for which there was no value in
+       build.properties. -->
+  <property name="Resin"            value="${Environment.RESIN_HOME}" />
+  <property name="Resin.lib"        value="${Resin}/lib" />
+  <property name="root"             value="." />
+  <property name="maven.home"       value="mvn" />
+  
+  <!-- This defines a macro called 'maven' which can be used to call mvn from within ant. -->
+  <macrodef name="maven">
+    <attribute name="options" default="" />
+    <attribute name="goal" />
+    <attribute name="basedir" />
+    <attribute name="resultproperty" default="maven.result" />
+    <element name="args" implicit="true" optional="true" />
+    <sequential>
+      <java classname="org.codehaus.classworlds.Launcher" fork="true"
+            dir="@{basedir}" resultproperty="@{resultproperty}">
+        <jvmarg value="-Xmx512m"/>
+        <classpath>
+          <fileset dir="${maven.home}/boot">
+            <include name="*.jar" />
+          </fileset>
+          <fileset dir="${maven.home}/lib">
+            <include name="*.jar" />
+          </fileset>
+        </classpath>
+        <sysproperty key="classworlds.conf" value="${maven.home}/bin/m2.conf" />
+        <sysproperty key="maven.home" value="${maven.home}" />
+        <arg line="--batch-mode @{options} @{goal}" />
+      </java>
+    </sequential>
+  </macrodef>
+
+  <!-- Define some timestamps.  These are used to name the zip archive produced
+       by this script, and to assign a version string for static assets. -->
+  <tstamp>
+    <format property="TIMESTAMP_LONG" pattern="yyyy-MM-dd-hh-mm-ss" locale="en" />
+    <format property="TIMESTAMP_SHORT" pattern="yyyyMMddhhmm" locale="en" />
+  </tstamp>
+
+  <!-- ================================================================== -->
+  <!-- Compile the project.                                               -->
+  <!-- ================================================================== -->
+  <target name="compile" depends="clean" description="Compiles Java source code">
+    <mkdir dir="temp/version" />
+    <echo message="StaticsVersion = ${TIMESTAMP_SHORT}" file="temp/version/version.conf" append="false" />
+    
+    <maven basedir="${root}" goal="compile" />
+    
+    <!-- Create the jar -->
+    <maven basedir="${root}" goal="jar:jar" />
+    
+    <move tofile="${root}/src/main/webapp/WEB-INF/lib/${ant.project.name}.jar">
+        <fileset dir="${root}/target/">
+            <include name="**/*.jar" />
+        </fileset>
+    </move>
+    
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- A template for building WAR files for different environments       -->
+  <!-- ================================================================== -->
+  <target name="build" depends="compile" description="Build WAR for deployment">
+    <war destfile="${build}/${ant.project.name}.war"
+         webxml="${root}/src/main/webapp/WEB-INF/web.xml"
+         basedir="${root}/src/main/webapp"
+         includes="images/**, html/**, WEB-INF/**, *.conf, *.resources, *.tld, *.txt, *.xml"
+         excludes="**/Thumbs.db, WEB-INF/tmp/**, WEB-INF/classes/**,WEB-INF/extras/**, WEB-INF/work/**, WEB-INF/web.xml">
+      <zipfileset dir="temp/version" prefix="WEB-INF" />
+    </war>
+    
+    <antcall target="clean" />
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- Cleans this project.                                               -->
+  <!-- ================================================================== -->
+  <target name="clean" description="Cleans the project">
+    <!-- Delete the temporary directory. -->
+    <delete dir="temp" quiet="true" />
+    <!-- Delete the target directory. -->
+    <delete dir="target" quiet="true" />
+    <!-- Delete all those lib files; we use mvn. -->
+    <delete quiet="true">
+      <fileset dir="${root}/Docroot/WEB-INF/lib">
+        <include name="**/*.jar" />
+      </fileset>
+    </delete>
+  </target>
+</project>

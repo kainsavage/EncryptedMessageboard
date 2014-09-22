@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{$title}}{{/title}}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="shortcut icon" href="{{app.path.img}}icon.png">
+  <link rel="stylesheet" href="{{app.path.css}}basicadmin/rs.css" />
+  <link rel="stylesheet" href="/templates/base.css" />
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,700,800,300italic,400italic,700italic,800italic" type="text/css" />
+  {{$css}}{{/css}}
+  <meta name="google-translate-customization" content="9efd13d5cdc9f26e-0c5a81be603f05ad-gf7ca2d9421cdc308-17"></meta>
+</head>
+<body>
+<header id="header">
+  <ul>
+    <li class="payerGroupHeader">
+    </li>
+    <li><a id="headerLogo" href="/portal"><img src="/partials/common/images/mystrength.png" alt="myStrength.com"/></a></li>
+    <div class="clear"></div>
+  </ul>
+  <div class="clear"></div>
+</header>
+<section id="nav">
+<nav id="headerNavBottom">
+  <ul>
+    <li><a href="/portal"><span class="my">my</span> Home</a></li>
+    <li><a href="/profile"><span class="my">my</span> Profile</a></li>
+    <li><a href="/journey"><span class="my">my</span> Journey</a></li>
+    <li><a href="/inspirations"><span class="my">my</span> Inspirations</a></li>
+    <li><a href="/goals">Goals</a></li>
+    
+    <li class="slash"><img src="/templates/images/nav-slash.png" alt="" /></li>
+    
+    <li><a href="/moodtracker">Mood</a></li>
+    <li><a href="/wellness/log">Wellness</a></li>
+    
+    <li class="slash"><img src="/templates/images/nav-slash.png" alt="" /></li>
+    
+    <li><a href="/community">Community</a></li>
+    <li><a href="/search">Explore</a></li>
+    
+    <li class="slash"><img src="/templates/images/nav-slash.png" alt="" /></li>
+    
+    <li><a href="/connect">ProviderConnect</a></li>
+  </ul>
+  <div class="clear"></div>
+</nav>
+</section>
+<div id="content">
+  <div class="clear"></div>
+  {{>/include/messages}}
+
+  <nav class="subnav">
+    {{$subnav}}{{/subnav}}
+  </nav>
+  {{$body}}{{/body}}  
+
+  <div class="clear"></div>
+</div>
+
+<section id="footerContainer">
+<footer id="footer">
+  <!-- 
+  <div id="google_translate_element"></div>
+  <script type="text/javascript">
+     function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'es', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+     }
+   </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> 
+  -->
+  <nav id="footerNav">
+    <a href="https://www.mystrength.com/contact-us/">Contact Us</a> &nbsp;
+    <a href="https://www.mystrength.com/privacy-policy/">Privacy</a> &nbsp;
+    <a href="https://www.mystrength.com/about-us/">About myStrength</a>
+  </nav>
+  <p id="footerCopyright">Copyright &copy; 2013 myStrength, Inc. All rights reserved.</p>
+  <div class="clear"></div>
+</footer>
+</section>
+
+<script src="{{app.path.js}}jquery.js"></script>
+<script src="{{app.path.js}}jquery.ba-bbq.js"></script>
+<script src="{{app.path.js}}jquery.prettyPhoto.js"></script>
+<script src="{{app.path.js}}rs.js"></script>
+<script src="{{app.path.js}}rs.forms.js"></script>
+
+<script type="text/javascript" src="//use.typekit.net/ewq4ejf.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+<script src="/userstatus"></script>
+{{#req.production}}
+<script src="//location3.blob.core.windows.net/analytics/mystrength.analytics.min.js"></script>
+<script type="text/javascript">var _kiq = _kiq || [];</script>
+<script type="text/javascript" src="//s3.amazonaws.com/ki.js/36929/77V.js" async="true"></script>
+{{#req.currentUser}}
+<script type="text/javascript" charset="utf-8">
+_kiq.push(['identify', '{{req.currentUser.userEmail}}']);
+</script>
+{{/req.currentUser}}
+{{/req.production}}
+
+
+{{$js}}{{/js}}
+</body>
+</html>

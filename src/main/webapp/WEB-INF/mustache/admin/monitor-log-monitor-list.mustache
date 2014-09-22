@@ -1,0 +1,57 @@
+{{</admin/admin-layout}}
+{{$subtitle}}Log Monitor Channels{{/subtitle}}
+{{$sub}}{{#req}}{{>/admin/logs-subnav}}{{/req}}{{/sub}}
+{{$auxCss}}<link rel="stylesheet" href="{{app.path.css}}basicadmin/admin-notifications.css" />{{/auxCss}}
+{{$adminjs}}
+{{#req}}
+<script type="text/javascript">
+$(function(){
+  var svUrl = '{{baseUri}}/monitor/log-monitor';
+  var channels = {{{Channels}}};
+   
+  function renderChannels()
+  {
+    var toAdd = "";
+    for (i = 0; i < channels.length; i++)
+    {
+      toAdd += "<tr>"
+        + "<td class='item'><a href='" + svUrl + "?act=view&ch=" + i + "'>" + channels[i].name + "</a></td>"
+        + "<td class='numeric'>" + channels[i].min + "</td>"
+        + "<td class='numeric'>" + channels[i].max + "</td>"
+        + "<td>" + (channels[i].contains ? channels[i].contains : "--") + "</td>"
+        + "<td>" + (channels[i].regex ? channels[i].regex : "--") + "</td>"
+        + "<td class='numeric'>" + channels[i].count + "</td>"
+        + "<td>" + (channels[i].last > 0 ? gba.standardDateString(new Date(channels[i].last)) : "--") + "</td>"
+        + "</tr>";
+    }
+ 
+    $("tbody#channels").append(toAdd);
+  }
+ 
+  renderChannels();
+});
+</script>
+{{/req}}
+{{/adminjs}}
+{{$adminbody}}
+ 
+{{#req}}
+<h2>Log Monitor Channels</h2>
+ 
+<table class="admin-table">
+<tbody id="channels">
+<tr>
+  <th>Name</th>
+  <th>Min</th>
+  <th>Max</th>
+  <th>Contains</th>
+  <th>Regular Expression</th>
+  <th>Count</th>
+  <th>Last Capture</th>
+</tr>
+</tbody>
+</table>
+{{/req}}
+ 
+{{/adminbody}}
+{{//admin/admin-layout}} 

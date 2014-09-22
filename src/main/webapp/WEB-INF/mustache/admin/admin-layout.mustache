@@ -1,0 +1,10 @@
+{{</layout}}
+{{$title}}{{$subtitle}}{{/subtitle}} - Administration{{/title}}
+{{$css}}<link rel="stylesheet" href="{{app.path.css}}basicadmin/basicadmin.css" />{{$auxCss}}{{/auxCss}}{{/css}}
+{{$subnav}}<a href="{{req.baseUri}}">Menu</a>{{$sub}}{{/sub}}<div class="subnavedge"></div>{{/subnav}}
+{{$body}}<div class="admin-content" id="admin-content">{{$adminbody}}{{/adminbody}}</div>{{/body}}
+{{$js}}<script src="{{app.path.js}}basicadmin/basicadmin.js"></script>
+<script src="{{app.path.js}}basicadmin/basicadmin-logmonitor.js"></script>
+<script src="{{app.path.js}}basicadmin/element-builder.js"></script>
+{{$adminjs}}{{/adminjs}}{{/js}}
+{{//layout}}

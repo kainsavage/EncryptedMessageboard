@@ -1,0 +1,32 @@
+{{</admin/admin-layout}}
+{{$subtitle}}View Thread #{{#req}}{{thread.id}}{{/req}}{{/subtitle}}
+{{$sub}}<a href="/admin/system/thread-list">Thread List</a>{{/sub}}
+{{$adminbody}}
+
+{{#req}}
+
+{{#thread}}
+<h2>Thread #{{id}} ({{name}})</h2>
+
+<p>{{.}}</p>
+
+<p>{{priorityName}} (level {{priority}}) priority{{#cpuTime}} with {{cpuTime}} ns of CPU time{{/cpuTime}}.</p>
+
+<table class="admin-table">
+<tr>
+  <th class="numeric">#</th>
+  <th>Trace</th>
+</tr>
+{{#trace}}
+<tr>
+  <td class="item numeric">{{index}}</td>
+  <td>{{trace.className}}.{{trace.methodName}} ({{trace.fileName}}:{{trace.lineNumber}})</td>
+  </tr>
+{{/trace}}
+
+</table>
+{{/thread}}
+{{/req}}
+
+{{/adminbody}}
+{{//admin/admin-layout}}

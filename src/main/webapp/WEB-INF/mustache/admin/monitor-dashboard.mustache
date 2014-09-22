@@ -1,0 +1,122 @@
+{{</admin/admin-layout}}
+{{$subtitle}}List {{req.className}}{{/subtitle}}
+{{$sub}}{{/sub}}
+{{$auxCss}}<link rel="stylesheet" href="{{app.path.css}}basicadmin/admin-dashboard.css" />{{/auxCss}}
+{{$adminjs}}<script type="text/javascript">
+
+var attributes = {{#req}}{{{attributes}}}{{/req}};
+
+function render(attributes) {
+  for (var i in attributes) {
+    var val = attributes[i];
+    $("#" + i).text(val);
+    if (val == 1) {
+      $("#" + i + "sng").show();
+      $("#" + i + "plr").hide();
+    } else {
+      $("#" + i + "sng").hide();
+      $("#" + i + "plr").show();
+    }
+  }
+}
+
+function refresh() {
+  var checked = $("input#refr:checked").length;
+  if (checked == 1) {
+    $.ajax({
+      url: "{{baseUri}}/monitor/dashboard?mode=1",
+      dataType: 'json',
+      type: 'get',
+      data: {},
+      success: function(data) {
+        render(data.attr);
+      }
+    });
+    setTimeout(refresh, 2500);
+  }
+}
+
+render(attributes);
+refresh();
+</script>{{/adminjs}}
+{{$adminbody}}
+
+{{#req}}
+<h1>Application Dashboard</h1>
+
+<div class="sec">
+  <div class="title">Application</div>
+  <div class="row">
+    <div class="label">Name</div>
+    <div class="val" id="appname"></div>
+  </div>
+  <div class="row">
+    <div class="label">Deployment</div>
+    <div class="val" id="deployment"></div>
+  </div>
+  <div class="row">
+    <div class="label">Uptime</div>
+    <div class="val"><span id="uptime"></span> (<span id="uptimems"></span> ms)</div>
+  </div>
+  <div class="row">
+    <div class="label">Requests</div>
+    <div class="val"><span id="reqnum"></span> requests processed</div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="title"><div class="ref"><a title="Current Requests" href="{{baseUri}}/monitor/monitor-current")">Requests</a> <a title="Performance Monitoring" href="{{baseUri}}/monitor/monitor-list">More</a></div>Performance</div>
+  <div class="row">
+    <div class="label">Requests</div>
+    <div class="val"><span id="reqs"></span> current request<span id="reqsplr">s<span> processing</div>
+  </div>
+  <div class="row">
+    <div class="label">Dispatches</div>
+    <div class="val"><span id="disps"></span> dispatch<span id="dispsplr">es</span> processing</div>
+  </div>
+  <div class="row">
+    <div class="label">Pages</div>
+    <div class="val"><span id="pages"></span> page<span id="pagesplr">s</span> rendering</div>
+  </div>
+  <div class="row">
+    <div class="label">Queries</div>
+    <div class="val"><span id="queries"></span> quer<span id="queriesplr">ies</span><span id="queriessng">y</span> executing</div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="title">Virtual Machine / Server</div>
+  <div class="row">
+    <div class="label">Memory</div>
+    <div class="val"><span id="freememmb"></span> MiB free, <span id="totalmemmb"></span> MiB total VM memory</div>
+  </div>
+  <div class="row">
+    <div class="label">VM</div>
+    <div class="val"><span id="vm"></span> (v<span id="vmvers"></span>)</div>
+  </div>
+  <div class="row">
+    <div class="label">Server</div>
+    <div class="val" id="sc"></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="title"><div class="ref"><a title="View Thread List" href="{{baseUri}}/system/thread-list">More</a></div>Threads</div>
+  <div class="row">
+    <div class="label">Threads</div>
+    <div class="val"><span id="threads"></span> VM threads</div>
+  </div>
+  <div class="row">
+    <div class="label">Active</div>
+    <div class="val"><span id="t10s"></span> thread<span id="t10splr">s</span> with greater than 10sec CPU time</div>
+  </div>
+  <div class="row">
+    <div class="label">Requests</div>
+    <div class="val"><span id="r5s"></span> request<span id="r5splr">s</span> with greater than 5sec CPU time</div>
+  </div>
+</div>
+
+{{/req}}
+
+{{/adminbody}}
+{{//admin/admin-layout}}
