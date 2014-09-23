@@ -97,16 +97,23 @@ em.profile = (function() {
     });
   }
   
+  function keypairGenerated(key) {    
+    $("#publicKey").val(key.publicKeyArmored);
+    $("#privateKey").val(key.privateKeyArmored);
+    
+    if(openModal) {
+      openModal.close();
+    }
+    $("#newKey").modal({});
+  }
+  
   function generateKeypair() {
-    setTimeout(function(){
-      var key = em.crypto.generateKeypair(2048);
-      if(openModal) {
-        openModal.close();
-      }
-      $("#newKey").modal({});
-      $("#publicKey").html(key.publicKeyArmored);
-      $("#privateKey").html(key.privateKeyArmored);
-    }, 100);
+    em.crypto.generateKeypair(2048, 'Test Testerson <test@example.com>', keypairGenerated);
+    
+    if(openModal) {
+      openModal.close();
+    }
+    $("#workingNewKey").modal({});
   }
   
   function attachGenerateKeypairControl() {
@@ -121,8 +128,7 @@ em.profile = (function() {
   }
   
   function saveProfile(e) {
-    var data = $(this).serialize().substring(0,$(this).serialize().indexOf("&private")),
-        validKey = false;
+    var data = $(this).serialize().substring(0,$(this).serialize().indexOf("&private"));
     
     e.preventDefault();
     
@@ -130,42 +136,37 @@ em.profile = (function() {
     $("#errors").html("");
 
     // Check that the keys are valid and match.
-    try {
-      var emsg = em.crypto.encryptMessageWithPublicKeyArmored($("#publicKey").val().replace(/\r\n/g,"\n").replace(/\n/g,"\r\n"), "test");
+    em.crypto.encryptMessageWithPublicKeyArmored($("#publicKey").val().replace(/\r\n/g,"\n").replace(/\n/g,"\r\n"), "test", function(emsg) {
       if(emsg.success) {
-        var dmsg = em.crypto.decryptMessageWithPrivateKeyArmored($("#privateKey").val().replace(/\r\n/g,"\n").replace(/\n/g,"\r\n"), emsg.message);
-        if(dmsg.success) {
-          if(dmsg.message === "test") {
-            validKey = true;
+        em.crypto.decryptMessageWithPrivateKeyArmored($("#privateKey").val().replace(/\r\n/g,"\n").replace(/\n/g,"\r\n"), emsg.message, function(dmsg) {
+          if(dmsg.success) {
+            if(dmsg.message === "test") {
+              $.ajax({
+                type: "POST",
+                url: "/api/profile/save",
+                data: data,
+                success: function(data) {
+                  if (data.success) {
+                    $("#success").html(Handlebars.partials['success'](data));
+                  }
+                  else {
+                    $("#errors").html(Handlebars.partials['errors'](data));
+                  }
+                }
+              });
+            }
+            else {
+              data = {
+                validation : {
+                  instructions : "Your public and private keys do not match."
+                }  
+              };
+              $("#errors").html(Handlebars.partials['errors'](data));
+            }
           }
-        }
+        });
       }
-    }
-    catch(err) {};
-    
-    if(validKey) {
-      $.ajax({
-        type: "POST",
-        url: "/api/profile/save",
-        data: data,
-        success: function(data) {
-          if (data.success) {
-            $("#success").html(Handlebars.partials['success'](data));
-          }
-          else {
-            $("#errors").html(Handlebars.partials['errors'](data));
-          }
-        }
-      });
-    }
-    else {
-      data = {
-        validation : {
-          instructions : "Your public and private keys do not match."
-        }  
-      };
-      $("#errors").html(Handlebars.partials['errors'](data));
-    }
+    });
   }
     
   function afterRender() {

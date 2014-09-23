@@ -9,7 +9,7 @@ public class ProfileForm extends BasicForm
 {
   // Completely chosen at random
   public static final int MAX_MESSAGE_LENGTH   = 4096;
-  public static final int MAX_SIGNATURE_LENGTH = 1024; 
+  public static final int MAX_SIGNATURE_LENGTH = 2048; 
   
   public final FormTextField         firstName;
   public final FormTextField         lastName;
@@ -35,7 +35,7 @@ public class ProfileForm extends BasicForm
     
     this.publicKey = new FormTextField("publicKey");
     this.publicKey.setRequired(true);
-    this.publicKey.setMaxLength(1024);
+    this.publicKey.setMaxLength(MAX_SIGNATURE_LENGTH);
     this.publicKey.addValidator(new PGPPublicKeyValidator());
     this.add(this.publicKey);
   }
