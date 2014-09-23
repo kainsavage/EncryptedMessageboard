@@ -853,21 +853,21 @@ JXG.Util.Unzip = function(barray) {
     if (debug)
       alert(bA);
     /*for (i=0;i<bA.length*8;i++){
-    document.write(readBit());
-    if ((i+1)%8==0)
-      document.write(" ");
-  }*/
+		document.write(readBit());
+		if ((i+1)%8==0)
+			document.write(" ");
+	}*/
     /*for (i=0;i<bA.length;i++){
-    document.write(readByte()+" ");
-    if ((i+1)%8==0)
-      document.write(" ");
-  }
-  for (i=0;i<bA.length;i++){
-    document.write(bA[i]+" ");
-    if ((i+1)%16==0)
-      document.write("<br>");
-  } 
-  */
+		document.write(readByte()+" ");
+		if ((i+1)%8==0)
+			document.write(" ");
+	}
+	for (i=0;i<bA.length;i++){
+		document.write(bA[i]+" ");
+		if ((i+1)%16==0)
+			document.write("<br>");
+	}	
+	*/
     //alert(bA);
     nextFile();
     return unzipped;
@@ -1729,11 +1729,11 @@ module.exports = {
     }
 
     /*  RFC4880: Tag 18 and Resync:
-     *  [...] Unlike the Symmetrically Encrypted Data Packet, no
-     *  special CFB resynchronization is done after encrypting this prefix
-     *  data.  See "OpenPGP CFB Mode" below for more details.
+		 *  [...] Unlike the Symmetrically Encrypted Data Packet, no
+		 *  special CFB resynchronization is done after encrypting this prefix
+		 *  data.  See "OpenPGP CFB Mode" below for more details.
 
-     */
+		 */
 
     if (resync) {
       for (i = 0; i < block_size; i++) {
@@ -6761,8 +6761,8 @@ var jsSHA = (function() {
       /* Append '1' at the end of the binary string */
       message[messageLen >> 5] |= 0x80 << (24 - (messageLen % 32));
       /* Append length of binary string in the position such that the new
-    length is a multiple of 512.  Logic does not work for even multiples
-    of 512 but there can never be even multiples of 512 */
+		length is a multiple of 512.  Logic does not work for even multiples
+		of 512 but there can never be even multiples of 512 */
       message[(((messageLen + 65) >> 9) << 4) + 15] = messageLen;
 
       appendedMessageLength = message.length;
@@ -7599,9 +7599,9 @@ function DSA() {
   }
 
   /*
-   * unused code. This can be used as a start to write a key generator
-   * function.
-  
+	 * unused code. This can be used as a start to write a key generator
+	 * function.
+	
   function generateKey(bitcount) {
     var qi = new BigInteger(bitcount, primeCenterie);
     var pi = generateP(q, 512);
@@ -7627,7 +7627,7 @@ function DSA() {
     } while (!pTemp.isProbablePrime(primeCenterie) || pTemp.bitLength() != l);
     return pTemp;
   }
-  
+	
   function generateG(p, q, bitlength, randomfn) {
     var aux = p.subtract(BigInteger.ONE);
     var pow = aux.divide(q);
@@ -7858,7 +7858,7 @@ function am3(i, x, w, j, c, n) {
   return c;
 }
 /*if(j_lm && (navigator != undefined && 
-  navigator.appName == "Microsoft Internet Explorer")) {
+	navigator.appName == "Microsoft Internet Explorer")) {
   BigInteger.prototype.am = am2;
   dbits = 30;
 }
@@ -15170,8 +15170,8 @@ Signature.prototype.read_sub_packet = function (bytes) {
         this.notation = this.notation || {};
         this.notation[name] = value;
       } else {
-        util.print_debug("Unsupported notation flag "+bytes.charCodeAt(mypos));
-        }
+    	  util.print_debug("Unsupported notation flag "+bytes.charCodeAt(mypos));
+      	}
       break;
     case 21:
       // Preferred Hash Algorithms
@@ -15230,7 +15230,7 @@ Signature.prototype.read_sub_packet = function (bytes) {
       this.embeddedSignature.read(bytes.substr(mypos));
       break;
     default:
-      util.print_debug("Unknown signature subpacket type " + type + " @:" + mypos);
+    	util.print_debug("Unknown signature subpacket type " + type + " @:" + mypos);
   }
 };
 
