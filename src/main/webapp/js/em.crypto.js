@@ -1,37 +1,45 @@
-em.provide("em.crypto")
+em.provide("em.crypto");
 
 em.crypto = (function() {
   'use strict';
 
-  var key = {}; // Your openpgp-generated key 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///                                              PRIVATE                                                   ///
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  var _key          = {}, // Your openpgp-generated key
+      _keyName      = 'em.crypto.key',
+      _workerUri    = '/js/openpgp.worker.js',
+      _localStorage = 'localStorage',
+      _crypto       = 'crypto';
 
   /**
    * Initializes the gathers/sets values stored in localStorage.
    */
-  function init() {
+  function _init() {
     // Ensure that localStorage and crypto are supported
-    if(!supportsHTML5LocalStorage() ||
-       !supportsCrypto) {
+    if(!_supportsHTML5LocalStorage() ||
+       !_supportsCrypto) {
       return false;
     }
     
     // Initialize openpgp
-    openpgp.initWorker('/js/openpgp.worker.js');
+    openpgp.initWorker(_workerUri);
     
     // Initialize key or leave as-is for first-visit.
-    if(localStorage["em.crypto.key"]) {
-      key = JSON.parse(localStorage["em.crypto.key"]);
+    if(localStorage[_keyName]) {
+      _key = JSON.parse(localStorage[_keyName]);
     }
     
     return true;
   }
   
   /**
-   * Returns whether the VM running this script has access to localstorage.
+   * @return {boolean} Whether the VM running this script has access to localstorage.
    */
-  function supportsHTML5LocalStorage() {
+  function _supportsHTML5LocalStorage() {
     try {
-      return 'localStorage' in window && window['localStorage'] !== null;
+      return _localStorage in window && window[_localStorage] !== null;
     }
     catch (err) {
       return false;
@@ -39,11 +47,11 @@ em.crypto = (function() {
   }
   
   /**
-   * Returns whether the VM running this script has access to crypto.
+   * @return {boolean} Whether the VM running this script has access to crypto.
    */
-  function supportsCrypto() {
+  function _supportsCrypto() {
     try {
-      return 'crypto' in window && window['crypto'] !== null;
+      return _crypto in window && window[_crypto] !== null;
     }
     catch (err) {
       return false;
@@ -53,18 +61,22 @@ em.crypto = (function() {
   /**
    * A private helper function for saving the key whenever it is updated.
    */
-  function saveKey() {
-    localStorage["em.crypto.key"] = JSON.stringify(key);
+  function _saveKey() {
+    localStorage[_keyName] = JSON.stringify(_key);
   }
 
 
   /**
-   * Returns an object with the encrypted message for the public key.
+   * Attempts to sign the given plaintextMessage with the given privateKey, encrypt the message+signature with
+   * the given publicKey, and call the given callback once completed.
+   * @param {module:key~Key} publicKey The receipient's openpgp public key object
+   * @param {module:key~Key} privateKey The sender's openpgp private key object
+   * @param {string} plaintextMessage The plaintext message
+   * @param {function} callback callback(error, result) to execute upon completion.
    */
-  function encryptMessage(publicKey, plaintextMessage, callback) {
-    openpgp.encryptMessage(publicKey, plaintextMessage, function(err, data) {
+  function _encryptMessage(publicKey, privateKey, plaintextMessage, callback) {
+    openpgp.signAndEncryptMessage(publicKey, privateKey, plaintextMessage, function(err, data) {
       if(err) {
-        // Well this is bad; we have a public key for this user but it's corrupted...
         callback({
           message: plaintextMessage,
           success: false
@@ -78,24 +90,20 @@ em.crypto = (function() {
       }
     });
   }
-  
-  /**
-   * 
-   */
-  function encryptMessageWithPublicKeyArmored(publicKeyArmored, plaintextMessage, callback) {
-    var publicKey = openpgp.key.readArmored(publicKeyArmored).keys[0];
-    
-    return encryptMessage(publicKey, plaintextMessage, callback);
-  }
 
   /**
-   * Returns an object with the decrypted message for this user.
+   * Attempts to decrypt the given encryptedMessage with the given privateKey, and if publicKey is
+   * not null verify the signature of the encryptedMessage with the publicKey.
+   * @param {module:key~Key} privateKey The recipient's openpgp private key object
+   * @param {module:key~Key} publicKey (optional) The sender's openpgp public key object
+   * @param {module:message~Message} encryptedMessage The message object with encrypted data
+   * @param {function} callback(err, result) The callback function 
    */
-  function decryptMessage(privateKey, encryptedMessage, callback) {
+  function _decryptMessage(privateKey, publicKey, encryptedMessage, callback) {
     var message = null;
     
     if(privateKey === null || privateKey === undefined) {
-      privateKey = openpgp.key.readArmored(key.privateKeyArmored).keys[0];
+      privateKey = openpgp.key.readArmored(_key.privateKeyArmored).keys[0];
     }
 
     if(encryptedMessage === null || encryptedMessage === undefined || encryptedMessage === '') {
@@ -105,29 +113,77 @@ em.crypto = (function() {
       });
     }
 
-    message = openpgp.decryptMessage(privateKey, encryptedMessage, function(err, data) {
-      if(err) {
-        callback({
-          message: encryptedMessage,
-          success: false
-        });
-      }
-      else {
-        callback({
-          message: data,
-          success: true
-        });
-      }
-    });
+    if(publicKey === null || publicKey == undefined) {
+      message = openpgp.decryptMessage(privateKey, encryptedMessage, function(err, data) {
+        if(err) {
+          callback({
+            message: encryptedMessage,
+            success: false
+          });
+        }
+        else {
+          callback({
+            message: data,
+            success: true
+          });
+        }
+      });
+    }
+    else {
+      message = openpgp.decryptAndVerifyMessage(privateKey, publicKey, encryptedMessage, function(err, data) {        
+        if(err) {
+          callback({
+            message: encryptedMessage,
+            success: false
+          });
+        }
+        else {
+          callback({
+            message: data,
+            success: true
+          });
+        }
+      });
+    }
+  }
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///                                              PUBLIC                                                    ///
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  /**
+   * Attempts to sign the given plaintextMessage with the given privateKeyArmored, encrypt the message+signature with
+   * the given publicKeyArmored, and call the given callback once completed.
+   * @param {string} publicKeyArmored The recipient's openpgp armored public key
+   * @param {string} privateKeyArmored The sender's openpgp armored private key
+   * @param {string} plaintextMessage The plaintext message to encrypt
+   * @param {function} callback(err, result) The callback function
+   */
+  function encryptMessageWithPublicKeyArmored(publicKeyArmored, privateKeyArmored, plaintextMessage, callback) {
+    var publicKey = openpgp.key.readArmored(publicKeyArmored).keys[0],
+        privateKey = openpgp.key.readArmored(privateKeyArmored).keys[0];
+    
+    return _encryptMessage(publicKey, privateKey, plaintextMessage, callback);
   }
   
   /**
-   * 
+   * Attempts to decrypt the given encryptedMessageArmored with the given privateKeyArmored, and if 
+   * publicKeyArmored is not null verify the signature of the encryptedMessage with the publicKey.
+   * @param {string} privateKeyArmored The recipient's openpgp armored private key
+   * @param {string} publicKeyarmored The sender's openpgp armored public key
+   * @param {string} encryptedMessageArmored The armored encrypted message
+   * @param {function} callback(err, result) The callback function
    */
-  function decryptMessageWithPrivateKeyArmored(privateKeyArmored, encryptedMessage, callback) {
-    var privateKey = openpgp.key.readArmored(privateKeyArmored).keys[0];
+  function decryptMessageWithPrivateKeyArmored(privateKeyArmored, publicKeyArmored, encryptedMessageArmored, callback) {
+    var privateKey = openpgp.key.readArmored(privateKeyArmored).keys[0],
+        publicKey = null,
+        encryptedMessage = openpgp.message.readArmored(encryptedMessageArmored);
     
-    return decryptMessage(privateKey, encryptedMessage, callback);
+    if(publicKeyArmored !== null && publicKeyArmored !== undefined) {
+      publicKey = openpgp.key.readArmored(publicKeyArmored).keys[0];
+    }
+    
+    return _decryptMessage(privateKey, publicKey, encryptedMessage, callback);
   }
   
   /**
@@ -137,9 +193,9 @@ em.crypto = (function() {
    * generateKeypair will override said key, if it exists. 
    */
   function keyExists() {
-    return key !== null && key !== undefined &&
-      key.privateKeyArmored !== undefined && key.privateKeyArmored !== null &&
-      key.publicKeyArmored !== undefined && key.publicKeyArmored !== null
+    return _key !== null && _key !== undefined &&
+      _key.privateKeyArmored !== undefined && _key.privateKeyArmored !== null &&
+      _key.publicKeyArmored !== undefined && _key.publicKeyArmored !== null
   }
   
   /**
@@ -148,8 +204,8 @@ em.crypto = (function() {
    * NOTE: this only generates a copy; any subsequent changes
    * to the returned value will NOT be propagated forward.
    */
-  function getKey() {
-    return JSON.parse(JSON.stringify(key));
+  function getKey() {    
+    return JSON.parse(JSON.stringify(_key));
   }
   
   /**
@@ -166,53 +222,21 @@ em.crypto = (function() {
    * has a key already, any messages that were decryptable before
    * will suddenly be non-decryptable since a new private key is
    * going to be generated and set here.
+   * @param {int} numBits The number of bits to use when generating the keypair
+   * @param {String} userId The identifier of the user
+   * @param {function} callback(err, result) The callback function 
    */
   function generateKeypair(numBits, userId, callback) {
     openpgp.generateKeyPair({numBits: numBits, userId: userId}, function(err, data) {      
-      key = data;
-      key.privateKeyArmored = data.privateKeyArmored;
-      key.publicKeyArmored = data.publicKeyArmored;
-      key.friends = [];
+      _key = data;
+      _key.privateKeyArmored = data.privateKeyArmored;
+      _key.publicKeyArmored = data.publicKeyArmored;
+      _key.friends = [];
       
-      saveKey();
+      _saveKey();
       
-      callback(key);
+      callback(_key);
     });
-  }
-  
-  /**
-   * Adds a copy of the given friend to this keyring.
-   * 
-   * Note: This is only going to add a copy of the passed friend
-   * to the keyring, so subsequent changes to the passed friend will
-   * not impact the actual friend in the keyring.
-   */
-  function addFriend(friend) {
-    key.friends[key.friends.length] = JSON.parse(JSON.stringify(friend));
-
-    saveKey();
-  }
-  
-  /**
-   * Returns a copy of the friends associated with this keyring.
-   * 
-   * Note: This is ONLY a copy of this data and therefore considered
-   * to be "read-only" in so far as any updates made to the data
-   * returned from this function will have zero effect on the actual
-   * friends data and subsequent calls to the friends array will not
-   * have the aforementioned changes.
-   */
-  function listFriends() {
-    return JSON.parse(JSON.stringify(key.friends));
-  }
-  
-  /**
-   * Applies our signature to the given plaintextMessage for the
-   * purpose of the recipient being able to verify that we are
-   * the actual originator of the message.
-   */
-  function signMessage(plaintextMessage) {
-    // TODO
   }
   
   /**
@@ -227,26 +251,21 @@ em.crypto = (function() {
    * user (which is why this site exists; that's the security point).
    */
   function deleteKey() {
-    key.publicKeyArmored = null;
-    key.privateKeyArmored = null;
-    key.friends = [];
+    _key.publicKeyArmored = null;
+    _key.privateKeyArmored = null;
+    _key.friends = [];
 
-    saveKey();
+    _saveKey();
   }
 
   // Run the initialization function and return.
-  return init() ? {
+  return _init() ? {
     keyExists : keyExists,
     getKey : getKey,
     deleteKey : deleteKey,
-    addFriend : addFriend,
-    listFriends : listFriends,
     generateKeypair : generateKeypair,
-    encryptMessage : encryptMessage,
     encryptMessageWithPublicKeyArmored : encryptMessageWithPublicKeyArmored,
-    decryptMessage : decryptMessage,
-    decryptMessageWithPrivateKeyArmored : decryptMessageWithPrivateKeyArmored,
-    signMessage : signMessage
+    decryptMessageWithPrivateKeyArmored : decryptMessageWithPrivateKeyArmored
   } : null;
 
 }());

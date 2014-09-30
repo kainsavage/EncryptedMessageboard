@@ -9,10 +9,9 @@ public class MessageForm extends BasicForm
 {
   // Completely chosen at random
   public static final int MAX_MESSAGE_LENGTH   = 4096;
-  public static final int MAX_SIGNATURE_LENGTH = 1024; 
   
   public final FormTextArea message;
-  public final FormTextArea signature;
+  public final FormHidden   recipient;
 
   public MessageForm(GeminiApplication application)
   {
@@ -24,10 +23,9 @@ public class MessageForm extends BasicForm
     this.message.addValidator(new PGPMessageValidator());
     this.add(this.message);
     
-    this.signature = new FormTextArea("signature");
-    this.signature.setRequired(false);
-    this.signature.setMaxLength(MAX_SIGNATURE_LENGTH);
-    this.signature.addValidator(new PGPSignatureValidator());
-    this.add(this.signature);
+    this.recipient = new FormHidden("recipient");
+    this.recipient.setRequired(true);
+    this.recipient.addValidator(new UserValidator());
+    this.add(this.recipient);    
   }
 }

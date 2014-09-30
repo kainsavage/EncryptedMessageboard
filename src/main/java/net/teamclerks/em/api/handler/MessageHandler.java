@@ -5,6 +5,7 @@ import java.util.*;
 import net.teamclerks.em.*;
 import net.teamclerks.em.api.entity.*;
 import net.teamclerks.em.api.form.*;
+import net.teamclerks.em.auth.entity.*;
 
 import com.google.common.collect.*;
 import com.techempower.cache.*;
@@ -41,27 +42,31 @@ public class MessageHandler extends MethodPathHandler<EMContext>
   public boolean post()
   {
     final Map<String,Object> json = Maps.newHashMap();
+    final User user = this.application.getSecurity().getUser(context());    
     
-    final MessageForm form = new MessageForm(this.application);
-    form.setValues(context());
-    final FormValidation validation = form.validate(context());
-    
-    if(validation.hasErrors())
+    if(user != null)
     {
-      json.put("success", false);
-      json.put("validation", validation);
-    }
-    else
-    {
-      Message message = new Message();
-      message.setCreated(new Date());
-      message.setMessage(form.message.getStringValue());
-      message.setSignature(form.signature.getStringValue());
-      message.setSender(context().getClientID());
+      final MessageForm form = new MessageForm(this.application);
+      form.setValues(context());
+      final FormValidation validation = form.validate(context());
       
-      store.put(message);
-      
-      json.put("success", true);
+      if(validation.hasErrors())
+      {
+        json.put("success", false);
+        json.put("validation", validation);
+      }
+      else
+      {
+        Message message = new Message();
+        message.setCreated(new Date());
+        message.setMessage(form.message.getStringValue());
+        message.setRecipient(form.recipient.getIntegerValue());
+        message.setSender(user.getId());
+        
+        store.put(message);
+        
+        json.put("success", true);
+      }
     }
     
     return json(json);

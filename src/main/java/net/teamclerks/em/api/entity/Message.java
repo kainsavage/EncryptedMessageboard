@@ -18,8 +18,9 @@ public class Message implements Identifiable, Comparable<Message>
           
           json.put("id", object.getId());
           json.put("message", object.getMessage());
-          json.put("signature", object.getSignature());
           json.put("created", object.getCreated());
+          json.put("sender", object.getSender());
+          json.put("recipient", object.getRecipient());
           
           return Visitors.forMaps().visitor(json);
         }
@@ -27,9 +28,9 @@ public class Message implements Identifiable, Comparable<Message>
   
   private int    id;
   private String message;
-  private String signature;
   private Date   created;
-  private String sender;
+  private int    sender;
+  private int    recipient;
   
   @Override
   public int compareTo(Message m)
@@ -59,16 +60,6 @@ public class Message implements Identifiable, Comparable<Message>
     this.message = message;
   }
 
-  public String getSignature()
-  {
-    return signature;
-  }
-
-  public void setSignature(String signature)
-  {
-    this.signature = signature;
-  }
-
   public Date getCreated()
   {
     return created;
@@ -79,14 +70,24 @@ public class Message implements Identifiable, Comparable<Message>
     this.created = created;
   }
 
-  public String getSender()
+  public int getSender()
   {
     return sender;
   }
 
-  public void setSender(String sender)
+  public void setSender(int sender)
   {
     this.sender = sender;
+  }
+
+  public int getRecipient()
+  {
+    return recipient;
+  }
+
+  public void setRecipient(int recipient)
+  {
+    this.recipient = recipient;
   }
 
 }

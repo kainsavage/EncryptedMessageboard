@@ -128,7 +128,9 @@ em.profile = (function() {
   }
   
   function saveProfile(e) {
-    var data = $(this).serialize().substring(0,$(this).serialize().indexOf("&private"));
+    var data = $(this).serialize().substring(0,$(this).serialize().indexOf("&private")),
+        publicKeyArmored = $("#publicKey").val().replace(/\r\n/g,"\n").replace(/\n/g,"\r\n"),
+        privateKeyArmored = $("#privateKey").val().replace(/\r\n/g,"\n").replace(/\n/g,"\r\n");
     
     e.preventDefault();
     
@@ -136,11 +138,11 @@ em.profile = (function() {
     $("#errors").html("");
 
     // Check that the keys are valid and match.
-    em.crypto.encryptMessageWithPublicKeyArmored($("#publicKey").val().replace(/\r\n/g,"\n").replace(/\n/g,"\r\n"), "test", function(emsg) {
+    em.crypto.encryptMessageWithPublicKeyArmored(publicKeyArmored, privateKeyArmored, "test", function(emsg) {
       if(emsg.success) {
-        em.crypto.decryptMessageWithPrivateKeyArmored($("#privateKey").val().replace(/\r\n/g,"\n").replace(/\n/g,"\r\n"), emsg.message, function(dmsg) {
+        em.crypto.decryptMessageWithPrivateKeyArmored(privateKeyArmored, publicKeyArmored, emsg.message.armor(), function(dmsg) {
           if(dmsg.success) {
-            if(dmsg.message === "test") {
+            if(dmsg.message.text === "test") {
               $.ajax({
                 type: "POST",
                 url: "/api/profile/save",
@@ -163,6 +165,14 @@ em.profile = (function() {
               };
               $("#errors").html(Handlebars.partials['errors'](data));
             }
+          }
+          else {
+            data = {
+              validation : {
+                instructions : "Your public and private keys do not match."
+              }  
+            };
+            $("#errors").html(Handlebars.partials['errors'](data));
           }
         });
       }
