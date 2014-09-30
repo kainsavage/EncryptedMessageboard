@@ -100,8 +100,6 @@ em.crypto = (function() {
    * @param {function} callback(err, result) The callback function 
    */
   function _decryptMessage(privateKey, publicKey, encryptedMessage, callback) {
-    var message = null;
-    
     if(privateKey === null || privateKey === undefined) {
       privateKey = openpgp.key.readArmored(_key.privateKeyArmored).keys[0];
     }
@@ -114,32 +112,55 @@ em.crypto = (function() {
     }
 
     if(publicKey === null || publicKey == undefined) {
-      message = openpgp.decryptMessage(privateKey, encryptedMessage, function(err, data) {
+      openpgp.decryptMessage(privateKey, encryptedMessage, function(err, data) {
         if(err) {
           callback({
-            message: encryptedMessage,
+            message: {
+              text: encryptedMessage
+            },
             success: false
           });
         }
         else {
           callback({
-            message: data,
+            message: {
+              text: data
+            },
+            validSignature: false,
             success: true
           });
         }
       });
     }
     else {
-      message = openpgp.decryptAndVerifyMessage(privateKey, publicKey, encryptedMessage, function(err, data) {        
+      // Attempt to decrypt and verify.
+      openpgp.decryptAndVerifyMessage(privateKey, publicKey, encryptedMessage, function(err, data) {        
         if(err) {
-          callback({
-            message: encryptedMessage,
-            success: false
+          // Maybe we can decrypt but NOT verify?
+          openpgp.decryptMessage(privateKey, encryptedMessage, function(err, data) {
+            if(err) {
+              callback({
+                message: { 
+                  text: encryptedMessage
+                },
+                success: false
+              });
+            }
+            else {
+              callback({
+                message: { 
+                  text: data
+                },
+                validSignature: false,
+                success: true
+              });
+            }
           });
         }
         else {
           callback({
             message: data,
+            validSignature: true,
             success: true
           });
         }
