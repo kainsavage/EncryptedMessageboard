@@ -1,6 +1,7 @@
 package net.teamclerks.em.api.form;
 
 import net.teamclerks.em.api.form.validator.*;
+import net.teamclerks.em.auth.entity.*;
 
 import com.techempower.gemini.*;
 import com.techempower.gemini.form.*;
@@ -13,7 +14,7 @@ public class MessageForm extends BasicForm
   public final FormTextArea message;
   public final FormHidden   recipient;
 
-  public MessageForm(GeminiApplication application)
+  public MessageForm(GeminiApplication application, User sender)
   {
     super(application);
     
@@ -25,7 +26,7 @@ public class MessageForm extends BasicForm
     
     this.recipient = new FormHidden("recipient");
     this.recipient.setRequired(true);
-    this.recipient.addValidator(new UserValidator());
+    this.recipient.addValidator(new MessageToUserValidator(sender));
     this.add(this.recipient);    
   }
 }

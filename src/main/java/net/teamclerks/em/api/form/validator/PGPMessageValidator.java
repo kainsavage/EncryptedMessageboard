@@ -11,8 +11,8 @@ import com.techempower.gemini.form.*;
 public class PGPMessageValidator implements FormElementValidator
 {
   private static final String BEGIN_PGP_MESSAGE = "-----BEGIN PGP MESSAGE-----";
-  private static final String VERSION           = "Version: OpenPGP.js v.1.20130825";
-  private static final String COMMENT           = "Comment: http://openpgpjs.org";
+//  private static final String VERSION           = "Version: OpenPGP.js v.1.20130825";
+//  private static final String COMMENT           = "Comment: http://openpgpjs.org";
   private static final String END_PGP_MESSAGE   = "-----END PGP MESSAGE-----";
   
   @Override
@@ -24,8 +24,8 @@ public class PGPMessageValidator implements FormElementValidator
     // but it's pretty good for now.
     String[] lines = encrypted.replaceAll("\r","").split("\n");
     if(!lines[0].equals(BEGIN_PGP_MESSAGE) ||
-       !lines[1].equals(VERSION) ||
-       !lines[2].equals(COMMENT) ||
+//       !lines[1].equals(VERSION) ||
+//       !lines[2].equals(COMMENT) ||
        !lines[lines.length - 1].equals(END_PGP_MESSAGE))
     {
       val.setRawError("Message invalid.", 

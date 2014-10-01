@@ -19,16 +19,22 @@ import com.google.common.collect.*;
 import com.techempower.gemini.form.*;
 import com.techempower.gemini.path.*;
 import com.techempower.gemini.path.annotation.*;
+import com.techempower.js.*;
 
 public class UserHandler
   extends MethodPathHandler<EMContext>
 {
+  private static final JavaScriptWriter UserWriter = JavaScriptWriter.custom()
+      .addVisitorFactory(
+          User.class, User.visitorFactory)
+      .build();
+  
   private final EMApplication application;
   private final EMSecurity security;
   
   public UserHandler(EMApplication application)
   {
-    super(application);
+    super(application, "UserHandler", UserWriter);
     
     this.application = application;
     this.security = this.application.getSecurity();
@@ -112,7 +118,7 @@ public class UserHandler
   {
     final Map<String,Object> json = Maps.newHashMap();
     
-    final User user = this.security.getUser(context()); 
+    final User user = this.security.getUser(context());
     
     if(user != null)
     {
@@ -121,9 +127,27 @@ public class UserHandler
       currentUser.put("userFirstname", user.getUserFirstname());
       currentUser.put("userLastname", user.getUserLastname());
       currentUser.put("userEmail", user.getUserEmail());
+      currentUser.put("friendsOnly", user.isFriendsOnlyMessaging());
       currentUser.put("userPublicKey", user.getPublicKey());
       
       json.put("currentUser", currentUser);
+    }
+    
+    return json(json);
+  }
+  
+  @PathSegment
+  public boolean friends()
+  {
+    final Map<String,Object> json = Maps.newHashMap();
+    
+    final User user = this.security.getUser(context());
+    if(user != null)
+    {
+      final Collection<User> friends = 
+          ((EMStore)application.getStore()).friends.rightValueList(user);
+      
+      json.put("friends", friends);
     }
     
     return json(json);

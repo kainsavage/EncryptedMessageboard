@@ -70,6 +70,19 @@ em.profile = (function() {
       tip: "#emailtip"
     });
     
+    $("#friendsOnly").tooltip({
+      // place tooltip on the right edge
+      position: "center right",
+      // a little tweaking of the position
+      offset: [0, -230],
+      // use the built-in fadeIn/fadeOut effect
+      effect: "fade",
+      // custom opacity setting
+      //opacity: 0.8,
+      // use this single tooltip element
+      tip: "#friendsOnlytip"
+    });
+    
     $("#publicKey").tooltip({
       // place tooltip on the right edge
       position: "center right",
@@ -108,7 +121,11 @@ em.profile = (function() {
   }
   
   function generateKeypair() {
-    em.crypto.generateKeypair(2048, 'Test Testerson <test@example.com>', keypairGenerated);
+    var error,
+        firstname = $("#firstname").val().trim(),
+        lastname = $("#lastname").val().trim(),
+        email = $("#email").val().trim();
+    em.crypto.generateKeypair(2048, (firstname + ' ' + lastname + ' <' + email + '>'), keypairGenerated);
     
     if(openModal) {
       openModal.close();
@@ -118,6 +135,23 @@ em.profile = (function() {
   
   function attachGenerateKeypairControl() {
     $("#generate").on('click', function(e) {
+      var error,
+          firstname = $("#firstname").val().trim(),
+          lastname = $("#lastname").val().trim(),
+          email = $("#email").val().trim(); 
+      
+      if(firstname === null || firstname === undefined || firstname === '' ||
+         lastname === null || lastname === undefined || lastname === '' ||
+         email === null || email === undefined || email === '') {
+         error = {
+           validation : {
+             instructions : "Your firstname, lastname, and email are required to create a keypair."
+           }  
+         };
+         $("#errors").html(Handlebars.partials['errors'](error));
+         return;
+      }
+      
       if(em.crypto.keyExists()) {
         openModal = $("#confirmOld").modal({});
       }
@@ -150,6 +184,7 @@ em.profile = (function() {
                 success: function(data) {
                   if (data.success) {
                     $("#success").html(Handlebars.partials['success'](data));
+                    em.crypto.saveKey();
                   }
                   else {
                     $("#errors").html(Handlebars.partials['errors'](data));
@@ -192,6 +227,8 @@ em.profile = (function() {
   };
   
   function render(data) {
+    em.crypto.init(data.currentUser.userUsername);
+    
     // Check for the key
     data.keyExists = em.crypto.keyExists();
     

@@ -8,13 +8,9 @@
       </span>
       <a href="/logout">Logout</a>
     </span>
-    {{#keyExists}}
     <a href="/home"{{#homePage}} class="active"{{/homePage}}>Home</a>
-    {{/keyExists}}
     <a href="/profile"{{#profilePage}} class="active"{{/profilePage}}>Profile</a>
-    {{#keyExists}}
     <a href="/friends"{{#friendsPage}} class="active"{{/friendsPage}}>Friends</a>
-    {{/keyExists}}
     {{else}}
     <span class="top-right-nav">
       <a href="/login">Login</a>

@@ -8,7 +8,6 @@ import net.teamclerks.em.api.form.*;
 import net.teamclerks.em.auth.entity.*;
 
 import com.google.common.collect.*;
-import com.techempower.cache.*;
 import com.techempower.gemini.form.*;
 import com.techempower.gemini.path.*;
 import com.techempower.gemini.path.annotation.*;
@@ -16,13 +15,13 @@ import com.techempower.gemini.path.annotation.*;
 public class MessageHandler extends MethodPathHandler<EMContext>
 {
   private final EMApplication application;
-  private final EntityStore   store;
+  private final EMStore   store;
 
   public MessageHandler(EMApplication app)
   {
     super(app);
     this.application = app;
-    this.store = this.application.getStore();
+    this.store = (EMStore)this.application.getStore();
   }
 
   @PathSegment
@@ -46,7 +45,7 @@ public class MessageHandler extends MethodPathHandler<EMContext>
     
     if(user != null)
     {
-      final MessageForm form = new MessageForm(this.application);
+      final MessageForm form = new MessageForm(this.application, user);
       form.setValues(context());
       final FormValidation validation = form.validate(context());
       
@@ -59,6 +58,7 @@ public class MessageHandler extends MethodPathHandler<EMContext>
       {
         Message message = new Message();
         message.setCreated(new Date());
+        message.setRead(false);
         message.setMessage(form.message.getStringValue());
         message.setRecipient(form.recipient.getIntegerValue());
         message.setSender(user.getId());

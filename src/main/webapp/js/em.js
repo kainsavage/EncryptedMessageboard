@@ -24,6 +24,16 @@ em.provide = function(namespace) {
   }
 }
 
+/**
+ * Helper method for requiring users to be logged in.
+ */
+em.membersOnly = function(data) {
+  if(data === null || data === undefined ||
+     data.currentUser === null || data.currentUser === undefined) {
+    window.location = "/";
+  }
+}
+
 // Set a globally-scoped helper method
 $.getParameterByName = function(name) {
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");

@@ -17,6 +17,9 @@
       <input type="email" name="email" id="email" value="{{currentUser.userEmail}}" /><label for="email" class="label">E-mail</label>
     </div>
     <div class="form-row">
+      <input type="checkbox" name="friendsOnly" id="friendsOnly" {{#currentUser.friendsOnly}}checked="CHECKED" {{/currentUser.friendsOnly}} /><label for="friendsOnly" class="label">Friends-only</label>
+    </div>
+    <div class="form-row">
       <textarea id="publicKey" name="publicKey">{{currentUser.userPublicKey}}</textarea><label for="publicKey" class="label">Public Key</label>
     </div>
     <div class="form-row">
@@ -76,6 +79,12 @@
   <div class="note">[TODO] will never contact you via e-mail.</div>
   <div>Unlike many other sites, this infomation is not required, but will show on your public profile if provided.</div>
   <div class="instruction">Providing your e-mail address may help people find and contact you, but this information is public and so anyone can potentially e-mail you if you provide it.</div>
+</div>
+
+<div class="tip" id="friendsOnlytip" style="display:none;">
+  <h5>Friends only messaging</h5>
+  <div class="note">Not required</div>
+  <div class="instruction">Setting your account to friends-only means that only your friends can send you encrypted messages.</div>
 </div>
 
 <div class="tip" id="publicKeytip" style="display:none;">

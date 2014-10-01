@@ -8,10 +8,14 @@
 
 package net.teamclerks.em.auth.entity;
 
+import java.util.*;
+
 import net.teamclerks.em.*;
 
+import com.google.common.collect.*;
 import com.techempower.data.annotation.*;
 import com.techempower.gemini.pyxis.*;
+import com.techempower.js.*;
 
 /**
  * Represents a user of the EncryptedMessageboard application.  Basic attributes
@@ -27,11 +31,27 @@ import com.techempower.gemini.pyxis.*;
 public class User
      extends BasicWebUser
 {
+  public static final VisitorFactory<User> visitorFactory =
+      new VisitorFactory<User>()
+      {
+        @Override
+        public Visitor visitor(User object)
+        {
+          final Map<String,Object> json = Maps.newHashMap();
+
+          json.put("firstname", object.getUserFirstname());
+          json.put("lastname", object.getUserLastname());
+          json.put("publickey", object.getPublicKey());
+          
+          return Visitors.forMaps().visitor(json);
+        }
+      };
 
   //
   // Member variables.
   //
-  private String publicKey;
+  private String  publicKey;
+  private boolean friendsOnlyMessaging;
 
   //
   // Member methods.
@@ -45,6 +65,16 @@ public class User
   public void setPublicKey(String publicKey)
   {
     this.publicKey = publicKey;
+  }
+  
+  public boolean isFriendsOnlyMessaging()
+  {
+    return this.friendsOnlyMessaging;
+  }
+  
+  public void setFriendsOnlyMessaging(boolean friendsOnlyMessaging)
+  {
+    this.friendsOnlyMessaging = friendsOnlyMessaging;
   }
 
   /**

@@ -14,6 +14,7 @@ public class ProfileForm extends BasicForm
   public final FormTextField         firstName;
   public final FormTextField         lastName;
   public final FormEmailAddressField email;
+  public final FormCheckBox          friendsOnly;
   public final FormTextField         publicKey;
 
   public ProfileForm(GeminiApplication application)
@@ -32,6 +33,9 @@ public class ProfileForm extends BasicForm
     this.email = new FormEmailAddressField("email");
     this.email.setMaxLength(254);
     this.add(this.email);
+    
+    this.friendsOnly = new FormCheckBox("friendsOnly");
+    this.add(this.friendsOnly);
     
     this.publicKey = new FormTextField("publicKey");
     this.publicKey.setRequired(true);

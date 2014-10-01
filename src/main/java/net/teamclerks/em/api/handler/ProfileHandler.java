@@ -59,9 +59,12 @@ public class ProfileHandler
       {
         // Success
         user.setPublicKey(StringEscapeUtils.unescapeHtml4(form.publicKey.getStringValue()));
+        user.setFriendsOnlyMessaging(form.friendsOnly.isChecked());
         user.setUserFirstname(form.firstName.getStringValue().trim());
         user.setUserLastname(form.lastName.getStringValue().trim());
         user.setUserEmail(form.email.getStringValue());
+        
+        this.application.getStore().put(user);
         
         json.put("success", true);
       }

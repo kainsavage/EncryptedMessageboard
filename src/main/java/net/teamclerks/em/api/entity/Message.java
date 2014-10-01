@@ -17,6 +17,7 @@ public class Message implements Identifiable, Comparable<Message>
           final Map<String,Object> json = Maps.newHashMap();
           
           json.put("id", object.getId());
+          json.put("read", object.isRead());
           json.put("message", object.getMessage());
           json.put("created", object.getCreated());
           json.put("sender", object.getSender());
@@ -26,11 +27,12 @@ public class Message implements Identifiable, Comparable<Message>
         }
       };
   
-  private int    id;
-  private String message;
-  private Date   created;
-  private int    sender;
-  private int    recipient;
+  private int     id;
+  private boolean read;
+  private String  message;
+  private Date    created;
+  private int     sender;
+  private int     recipient;
   
   @Override
   public int compareTo(Message m)
@@ -48,6 +50,16 @@ public class Message implements Identifiable, Comparable<Message>
   public void setId(int identity)
   {
     this.id = identity;
+  }
+  
+  public boolean isRead()
+  {
+    return this.read;
+  }
+  
+  public void setRead(boolean read)
+  {
+    this.read = read;
   }
 
   public String getMessage()

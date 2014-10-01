@@ -8,7 +8,6 @@
 
 package net.teamclerks.em;
 
-import net.teamclerks.em.api.entity.*;
 import net.teamclerks.em.api.handler.*;
 import net.teamclerks.em.auth.*;
 
@@ -103,12 +102,8 @@ public class EMApplication
   
   @Override
   protected EntityStore constructEntityStore()
-  {
-    EntityStore store = new EntityStore(this, getConnectorFactory());
-    
-    store.register(CacheGroup.of(Message.class));
-    
-    return store;
+  {    
+    return new EMStore(this, getConnectorFactory());
   }
 
   /**

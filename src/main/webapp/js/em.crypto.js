@@ -8,31 +8,10 @@ em.crypto = (function() {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
   var _key          = {}, // Your openpgp-generated key
-      _keyName      = 'em.crypto.key',
+      _keyName      = 'em.crypto.key.',
       _workerUri    = '/js/openpgp.worker.js',
       _localStorage = 'localStorage',
       _crypto       = 'crypto';
-
-  /**
-   * Initializes the gathers/sets values stored in localStorage.
-   */
-  function _init() {
-    // Ensure that localStorage and crypto are supported
-    if(!_supportsHTML5LocalStorage() ||
-       !_supportsCrypto) {
-      return false;
-    }
-    
-    // Initialize openpgp
-    openpgp.initWorker(_workerUri);
-    
-    // Initialize key or leave as-is for first-visit.
-    if(localStorage[_keyName]) {
-      _key = JSON.parse(localStorage[_keyName]);
-    }
-    
-    return true;
-  }
   
   /**
    * @return {boolean} Whether the VM running this script has access to localstorage.
@@ -56,13 +35,6 @@ em.crypto = (function() {
     catch (err) {
       return false;
     }
-  }
-  
-  /**
-   * A private helper function for saving the key whenever it is updated.
-   */
-  function _saveKey() {
-    localStorage[_keyName] = JSON.stringify(_key);
   }
 
 
@@ -171,6 +143,22 @@ em.crypto = (function() {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///                                              PUBLIC                                                    ///
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Initializes the gathers/sets values stored in localStorage.
+   * @param {string} username The user to whom the key belongs.
+   */
+  function init(username) {
+    _keyName += username;
+    
+    // Initialize openpgp
+    openpgp.initWorker(_workerUri);
+    
+    // Initialize key or leave as-is for first-visit.
+    if(localStorage[_keyName]) {
+      _key = JSON.parse(localStorage[_keyName]);
+    }
+  }
   
   /**
    * Attempts to sign the given plaintextMessage with the given privateKeyArmored, encrypt the message+signature with
@@ -230,6 +218,13 @@ em.crypto = (function() {
   }
   
   /**
+   * A helper function for saving the key whenever it is updated.
+   */
+  function saveKey() {
+    localStorage[_keyName] = JSON.stringify(_key);
+  }
+  
+  /**
    * Generates a key to be used by the application for this user.
    * 
    * Note: this is a VERY slow operation and with sufficient bit-
@@ -248,13 +243,9 @@ em.crypto = (function() {
    * @param {function} callback(err, result) The callback function 
    */
   function generateKeypair(numBits, userId, callback) {
-    openpgp.generateKeyPair({numBits: numBits, userId: userId}, function(err, data) {      
-      _key = data;
+    openpgp.generateKeyPair({numBits: numBits, userId: userId}, function(err, data) {
       _key.privateKeyArmored = data.privateKeyArmored;
       _key.publicKeyArmored = data.publicKeyArmored;
-      _key.friends = [];
-      
-      _saveKey();
       
       callback(_key);
     });
@@ -274,15 +265,16 @@ em.crypto = (function() {
   function deleteKey() {
     _key.publicKeyArmored = null;
     _key.privateKeyArmored = null;
-    _key.friends = [];
 
     _saveKey();
   }
 
   // Run the initialization function and return.
-  return _init() ? {
+  return (_supportsHTML5LocalStorage() && _supportsCrypto) ? {
+    init : init,
     keyExists : keyExists,
     getKey : getKey,
+    saveKey : saveKey,
     deleteKey : deleteKey,
     generateKeypair : generateKeypair,
     encryptMessageWithPublicKeyArmored : encryptMessageWithPublicKeyArmored,

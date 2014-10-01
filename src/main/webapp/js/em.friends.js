@@ -5,7 +5,8 @@ em.friends = (function() {
   
   var renderData = {
       url: [
-        "/api/user/auth"
+        "/api/user/auth",
+        "/api/user/friends"
       ],
       pageData: {
         friendsPage: true
@@ -26,12 +27,9 @@ em.friends = (function() {
   };
   
   function render(data) {
-    // Check for the key
-    data.keyExists = em.crypto.keyExists();
-    
-    if(data.keyExists) {
-      data.friends = em.crypto.listFriends();
-    }
+    em.membersOnly(data);
+
+    em.crypto.init(data.currentUser.userUsername);
     
     GeminiTemplater.render(data, afterRender);
   }
