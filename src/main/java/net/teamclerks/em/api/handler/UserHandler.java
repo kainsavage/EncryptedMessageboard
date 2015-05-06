@@ -155,7 +155,7 @@ public class UserHandler
     if(user != null)
     {
       final Collection<User> friends = 
-          (Collection<User>)application.getStore().<User,User>getRelation(Friends.class).rightValueList(user.getId());
+          (Collection<User>)application.getStore().getRelation(Friends.class).rightValueList(user.getId());
       
       json.put("friends", friends);
     }

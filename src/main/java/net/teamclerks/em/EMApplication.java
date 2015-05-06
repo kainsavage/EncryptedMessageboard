@@ -10,7 +10,6 @@ package net.teamclerks.em;
 
 import net.teamclerks.em.admin.handler.EMGeminiAdminHandler;
 import net.teamclerks.em.api.handler.MessageHandler;
-import net.teamclerks.em.api.handler.ProfileHandler;
 import net.teamclerks.em.api.handler.UserHandler;
 import net.teamclerks.em.auth.EMSecurity;
 
@@ -118,24 +117,24 @@ public class EMApplication
   {
     final PathDispatcher.Configuration<EMContext> config =
         new PathDispatcher.Configuration<>();
-
-    final UserHandler          userHandler = new UserHandler(this);
-    final ProfileHandler       profileHandler = new ProfileHandler(this);
-    final MessageHandler       messageHandler = new MessageHandler(this);
         
     config
           .add("api",new DispatchSegment<EMContext>()
+            // Gemini built-in handlers
             .add("login", new LoginHandler<EMContext>(this))
             .add("logout", new LogoutHandler<EMContext>(this))
             .add("password-reset", new PasswordResetHandler<EMContext>(this))
             .add("admin", new EMGeminiAdminHandler(this))
-            
-            .add("user", userHandler)
-            .add("message", messageHandler)
+            // Normal handlers
+            .add("user", new UserHandler(this))
+            .add("message", new MessageHandler(this))
           )
+          // Gemini built-in listeners
           .add(getMonitor().getListener())
+          // Gemini built-in handlers
           .add(new BasicExceptionHandler(this))
           .add(new NotificationExceptionHandler(this))
+          // Default handler
           .setDefault(new MethodUriHandler<EMContext>(this) {
             @Path("*")
             public boolean everything()
