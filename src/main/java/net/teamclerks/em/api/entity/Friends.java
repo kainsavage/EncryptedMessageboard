@@ -8,11 +8,10 @@
  
 package net.teamclerks.em.api.entity;
 
-import net.teamclerks.em.auth.entity.User;
+import net.teamclerks.em.auth.entity.*;
 
-import com.techempower.data.annotation.Left;
-import com.techempower.data.annotation.Relation;
-import com.techempower.data.annotation.Right;
+import com.techempower.data.*;
+import com.techempower.data.annotation.*;
 
 /**
  * Represents a user group relation for the EncryptedMessageboard application.
@@ -23,7 +22,7 @@ import com.techempower.data.annotation.Right;
  *   2013-10-07 - ms - Created
  */
 @Relation
-public class Friends
+public class Friends implements EntityRelationDescriptor<User,User>
 {
   @Left
   User from;

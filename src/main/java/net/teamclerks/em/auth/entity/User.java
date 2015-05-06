@@ -13,6 +13,7 @@ import java.util.Map;
 import net.teamclerks.em.EMApplication;
 
 import com.google.common.collect.Maps;
+import com.techempower.collection.MutableNamedObjects;
 import com.techempower.data.annotation.CachedEntity;
 import com.techempower.gemini.pyxis.BasicSecurity;
 import com.techempower.gemini.pyxis.BasicWebUser;
@@ -91,6 +92,22 @@ public class User
   public User(BasicSecurity<User, Group> security)
   {
     super(security);
+  }
+  
+  /**
+   * Returns a simple view map.
+   */
+  public final Map<String,Object> view()
+  {
+    return new MutableNamedObjects()
+      .put("id", this.getId())
+      .put("username", this.getUserUsername())
+      .put("firstname", this.getUserFirstname())
+      .put("lastname", this.getUserLastname())
+      .put("email", this.getUserEmail())
+      .put("friendsOnly", this.isFriendsOnlyMessaging())
+      .put("publicKey", this.getPublicKey())
+      .asMap();
   }
 
 }   // End User.

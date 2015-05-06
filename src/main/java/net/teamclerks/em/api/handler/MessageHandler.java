@@ -8,12 +8,15 @@ import java.util.Map;
 import net.teamclerks.em.EMApplication;
 import net.teamclerks.em.EMContext;
 import net.teamclerks.em.api.entity.Message;
-import net.teamclerks.em.api.form.MessageForm;
+import net.teamclerks.em.api.validator.MessageToUserValidator;
+import net.teamclerks.em.api.validator.PGPMessageValidator;
 import net.teamclerks.em.auth.entity.User;
 
 import com.google.common.collect.Maps;
 import com.techempower.cache.EntityStore;
-import com.techempower.gemini.form.FormValidation;
+import com.techempower.gemini.input.Input;
+import com.techempower.gemini.input.ValidatorSet;
+import com.techempower.gemini.input.validator.LengthValidator;
 import com.techempower.gemini.path.MethodSegmentHandler;
 import com.techempower.gemini.path.annotation.PathSegment;
 
@@ -22,6 +25,12 @@ public class MessageHandler
 {
   private final EMApplication application;
   private final EntityStore   store;
+  
+  private final ValidatorSet postMessage = new ValidatorSet(
+    new LengthValidator("message", 1, 4096),
+    new PGPMessageValidator("message"),
+    new MessageToUserValidator("recipient")
+  );
 
   public MessageHandler(EMApplication app)
   {
@@ -51,27 +60,24 @@ public class MessageHandler
     
     if(user != null)
     {
-      final MessageForm form = new MessageForm(this.application, user);
-      form.setValues(context());
-      final FormValidation validation = form.validate(context());
+      Input input = this.postMessage.process(context());
       
-      if(validation.hasErrors())
-      {
-        json.put("success", false);
-        json.put("validation", validation);
-      }
-      else
+      if(input.passed())
       {
         Message message = new Message();
         message.setCreated(new Date());
         message.setRead(false);
-        message.setMessage(form.message.getStringValue());
-        message.setRecipient(form.recipient.getIntegerValue());
+        message.setMessage(input.values().get("message"));
+        message.setRecipient(input.values().getInt("recipient"));
         message.setSender(user.getId());
         
         store.put(message);
         
         json.put("success", true);
+      }
+      else
+      {
+        return validationFailure(input);
       }
     }
     

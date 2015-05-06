@@ -1,4 +1,4 @@
-package net.teamclerks.em.api.form.validator;
+package net.teamclerks.em.api.validator;
 
 import net.teamclerks.em.*;
 import net.teamclerks.em.auth.entity.*;

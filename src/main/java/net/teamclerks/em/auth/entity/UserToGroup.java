@@ -8,6 +8,7 @@
  
 package net.teamclerks.em.auth.entity;
 
+import com.techempower.data.*;
 import com.techempower.data.annotation.*;
 
 /**
@@ -19,11 +20,11 @@ import com.techempower.data.annotation.*;
  *   2013-10-07 - ms - Created
  */
 @Relation
-public class UserToGroup
+public class UserToGroup implements EntityRelationDescriptor<User,Group>
 {
   @Left
-  User userId;
+  User user;
   
   @Right
-  Group groupId;
+  Group group;
 }
