@@ -68,3 +68,19 @@
   -moz-transition: @arguments;
   -webkit-transition: @arguments;
 }
+ 
+.noselect() {
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.columns(@count, @gap) {
+  columns: @count;
+  -moz-columns: @count;
+  -webkit-columns: @count;
+  column-gap: @gap;
+  -moz-column-gap: @gap;
+  -webkit-column-gap: @gap;
+}

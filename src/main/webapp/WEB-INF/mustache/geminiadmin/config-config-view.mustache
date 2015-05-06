@@ -1,0 +1,25 @@
+{{</geminiadmin/admin-layout}}
+{{$subtitle}}List {{req.className}}{{/subtitle}}
+{{$sub}}{{/sub}}
+{{$adminbody}}
+
+{{#req}}
+<h1>Running Configuration</h1>
+
+<table class="admin-table">
+<tr>
+  <th>Attribute</th>
+  <th>Value</th>
+</tr>
+{{#rows}}
+<tr>
+  <td class="item">{{key}}</td>
+  <td>{{value}}</td>
+</tr>
+{{/rows}}
+</table>
+
+{{/req}}
+
+{{/adminbody}}
+{{//geminiadmin/admin-layout}}

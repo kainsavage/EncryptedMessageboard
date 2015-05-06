@@ -1,0 +1,37 @@
+<div class="content-column ">
+  <nav class="subnav">
+
+  </nav>
+  <div class="contentcontainer" data-bind="if: user() === null">
+    <h1 class="no-margin">Welcome to [TODO]</h1>
+
+    <p>It looks like this is the first time you have been to [TODO].
+
+    <p>In order to do anything useful here, you will first need to generate a public key (allowing others to send you encrypted messages) and a private key (in order to decrypt those encrypted messages).
+
+    <p>This will require you to <a href="/register">register</a>.
+
+    <p>It is important to note that while we require a valid user registration, we do not require any personal information. Other sites would have you fill the following out, at least:
+    <ul>
+      <li>Your name</li>
+      <li>Your email</li>
+    </ul>
+
+    The only bits of information we require are non-private ones:
+    <ul>
+      <li>Your public key (which will be built afterwards)</li>
+      <li>A username/nickname</li>
+      <li>A password for this login</li>
+    </ul>
+
+    <p>There are many reasons why we decided to keep the required data to a minimum, but they required a lot of explanation and can become really rather technical. You can, and are advised, to read about them on the <a href="/faq">FAQ</a>.
+  </div>
+  <div class="contentcontainer" data-bind="if: user() !== null">
+    <div id="messageArea">
+      <h1>Latest Messages</h1>
+      <ul id="latest" data-bind="foreach: latestMessages">
+        <li data-bind="text: message" data-bind="attr: { id: id }"></li>
+      </ul>
+    </div>
+  </div>
+</div>

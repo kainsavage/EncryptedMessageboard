@@ -8,23 +8,33 @@
 
 package net.teamclerks.em.api.handler;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
-import net.teamclerks.em.*;
-import net.teamclerks.em.api.form.*;
-import net.teamclerks.em.auth.*;
-import net.teamclerks.em.auth.entity.*;
+import net.teamclerks.em.EMApplication;
+import net.teamclerks.em.EMContext;
+import net.teamclerks.em.api.entity.Friends;
+import net.teamclerks.em.api.form.ProfileForm;
+import net.teamclerks.em.api.form.RegistrationForm;
+import net.teamclerks.em.auth.EMSecurity;
+import net.teamclerks.em.auth.entity.User;
 
-import com.google.common.collect.*;
-import com.techempower.gemini.form.*;
-import com.techempower.gemini.path.*;
-import com.techempower.gemini.path.annotation.*;
-import com.techempower.js.*;
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import com.google.common.collect.Maps;
+import com.techempower.gemini.form.FormValidation;
+import com.techempower.gemini.path.MethodUriHandler;
+import com.techempower.gemini.path.annotation.Get;
+import com.techempower.gemini.path.annotation.Path;
+import com.techempower.gemini.path.annotation.Post;
+import com.techempower.gemini.path.annotation.Put;
+import com.techempower.js.JavaScriptWriter;
+import com.techempower.js.legacy.LegacyJavaScriptWriter;
 
 public class UserHandler
-  extends MethodPathHandler<EMContext>
+  extends MethodUriHandler<EMContext>
 {
-  private static final JavaScriptWriter UserWriter = JavaScriptWriter.custom()
+  private static final JavaScriptWriter UserWriter = LegacyJavaScriptWriter.custom()
       .addVisitorFactory(
           User.class, User.visitorFactory)
       .build();
@@ -40,8 +50,69 @@ public class UserHandler
     this.security = this.application.getSecurity();
   }
   
-  @PathSegment
-  public boolean register()
+  @Path("")
+  @Get
+  public boolean getUser()
+  {
+    final Map<String,Object> json = Maps.newHashMap();
+    
+    final User user = this.security.getUser(context());
+    
+    if(user != null)
+    {
+      json.put("id", user.getId());
+      json.put("username", user.getUserUsername());
+      json.put("firstname", user.getUserFirstname());
+      json.put("lastname", user.getUserLastname());
+      json.put("email", user.getUserEmail());
+      json.put("friendsOnly", user.isFriendsOnlyMessaging());
+      json.put("publicKey", user.getPublicKey());
+    }
+    
+    return json(json);
+  }
+  
+  @Path("")
+  @Put
+  public boolean editUser()
+  {
+    final Map<String,Object> json = Maps.newHashMap();
+
+    final User user = this.security.getUser(context());
+    
+    if(user != null)
+    {
+      ProfileForm form = new ProfileForm(this.application);
+      form.setValues(context());
+      
+      FormValidation validation = form.validate(context());
+
+      if(validation.hasErrors())
+      {
+        json.put("validation", validation);
+        json.put("success", false);
+      }
+      else
+      {
+        // Success
+        user.setPublicKey(StringEscapeUtils.unescapeHtml4(form.publicKey.getStringValue()));
+        user.setFriendsOnlyMessaging(form.friendsOnly.isChecked());
+        user.setUserFirstname(form.firstName.getStringValue().trim());
+        user.setUserLastname(form.lastName.getStringValue().trim());
+        user.setUserEmail(form.email.getStringValue());
+        
+        this.application.getStore().put(user);
+        
+        json.put("success", true);
+      }
+    }
+    
+    return json(json);
+  }
+  
+  @Path("")
+  @Post
+  public boolean registerUser()
   {
     final Map<String,Object> json = Maps.newHashMap();
     
@@ -73,71 +144,10 @@ public class UserHandler
     
     return json(json);
   }
-
-  @PathSegment
-  public boolean login()
-  {
-    final Map<String,Object> json = Maps.newHashMap();
-    
-    final LoginForm form = new LoginForm(context());
-    
-    form.setValues(context());
-
-    final FormValidation formValidation  = form.validate(context());
-
-    // Username and password provided.
-    if ( formValidation.isGood() )
-    {
-      // Login successful.
-      json.put("success", true);
-      json.put("redirect",form.values().get("lhredirect"));
-    }
-    // Form not complete.  Include the Validation.
-    json.put("validation", formValidation);
-    
-    return json(json);
-  }
   
-  @PathSegment
-  public boolean logout()
-  {
-    final Map<String,Object> json = Maps.newHashMap();
-
-    final User user = this.security.getUser(context()); 
-    
-    if(user != null)
-    {
-      this.security.logout(context());
-    }
-    
-    return json(json);
-  }
-  
-  @PathSegment
-  public boolean auth()
-  {
-    final Map<String,Object> json = Maps.newHashMap();
-    
-    final User user = this.security.getUser(context());
-    
-    if(user != null)
-    {
-      final Map<String,Object> currentUser = Maps.newHashMap();
-      currentUser.put("userUsername", user.getUserUsername());
-      currentUser.put("userFirstname", user.getUserFirstname());
-      currentUser.put("userLastname", user.getUserLastname());
-      currentUser.put("userEmail", user.getUserEmail());
-      currentUser.put("friendsOnly", user.isFriendsOnlyMessaging());
-      currentUser.put("userPublicKey", user.getPublicKey());
-      
-      json.put("currentUser", currentUser);
-    }
-    
-    return json(json);
-  }
-  
-  @PathSegment
-  public boolean friends()
+  @Path("friends")
+  @Get
+  public boolean getFriends()
   {
     final Map<String,Object> json = Maps.newHashMap();
     
@@ -145,7 +155,7 @@ public class UserHandler
     if(user != null)
     {
       final Collection<User> friends = 
-          ((EMStore)application.getStore()).friends.rightValueList(user);
+          (Collection<User>)application.getStore().<User,User>getRelation(Friends.class).rightValueList(user.getId());
       
       json.put("friends", friends);
     }

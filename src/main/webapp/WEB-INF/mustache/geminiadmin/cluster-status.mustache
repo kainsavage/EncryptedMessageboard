@@ -1,0 +1,36 @@
+{{</geminiadmin/admin-layout}}
+{{$subtitle}}Cluster Status{{/subtitle}}
+{{$sub}}{{#req}}{{/req}}{{/sub}}
+{{$adminbody}}
+<h1>Cluster Status</h1>
+
+<style>
+tr.thisnode td {
+  color: rgb(0,120,80);
+}
+</style>
+
+<table class="admin-table">
+<tr>
+  <th>ID</th>
+  <th>Channel</th>
+  <th>Name</th>
+  <th>Connected</th>
+  <th>Elapsed Time</th>
+  <th>Messages Out</th>
+  <th>Description</th>
+</tr>
+<tbody id="nodes">
+</tbody>
+</table>
+
+<p id="thisnode"></p>
+
+{{#req}}
+{{/req}}
+
+{{/adminbody}}
+{{$adminjs}}
+<script src="{{app.path.js}}geminiadmin/cluster-status.js"></script>
+{{/adminjs}}
+{{//geminiadmin/admin-layout}}

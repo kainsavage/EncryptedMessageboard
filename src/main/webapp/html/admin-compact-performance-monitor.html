@@ -1,7 +1,7 @@
 <html>
 <head>
 <title>Performance Monitoring</title>
-<link type="text/css" rel="stylesheet" href="../css/basicadmin.css" />
+<link type="text/css" rel="stylesheet" href="../css/geminiadmin/basicadmin.css" />
 <link rel="shortcut icon" href="../images/monitor-graph.png" />
 <style>
 
@@ -73,9 +73,9 @@ body, td {
 }
 
 </style>
-<script type="text/javascript" src="../js/basicadmin.js"></script>
-<script type="text/javascript" src="../js/jquery.js"></script>
-<script type="text/javascript" src="../js/jquery.flot.js"></script>
+<script type="text/javascript" src="../js/geminiadmin/basicadmin.js"></script>
+<script type="text/javascript" src="../js/external/jquery.js"></script>
+<script type="text/javascript" src="../js/external/jquery.flot.js"></script>
 </head>
 
 <body>
@@ -103,7 +103,7 @@ body, td {
 <script>
 
 var mode = 0,
-     svUrl = '../',
+    svUrl = '/admin/monitor/',
     detail = '',
     exc = 5,
     commands,
@@ -191,9 +191,9 @@ function render(commands, uptime) {
 };
 
 function refresh() {
-  var urlSuffix = '?cmd=admin-monitor-list&mode=1'
+  var urlSuffix = 'monitor-list?mode=1'
   if (mode == 1) {
-    urlSuffix = '?cmd=admin-monitor-current&mode=1';
+    urlSuffix = 'monitor-current?mode=1';
   }
 
   $.ajax({

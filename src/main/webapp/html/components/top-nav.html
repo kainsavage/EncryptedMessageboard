@@ -1,0 +1,17 @@
+<nav class="top-nav">
+  <div data-bind="if: user() !== null">
+    <span class="top-right-nav">
+      <span class="current-user-details">
+        <span class="current-user-alias" data-bind="text: user().username"></span>
+      </span>
+      <a href="/logout">Logout</a>
+    </span>
+    <a href="/" data-bind="attr: { class: homeClass }">Home</a>
+    <a href="/profile" data-bind="attr: { class: profileClass }">Profile</a>
+    <a href="/friends" data-bind="attr: { class: friendsClass }">Friends</a>
+  </div>
+  <div data-bind="if: user() === null">
+    <span class="top-right-nav"><a href="/login" data-bind="attr: { class: loginClass }">Login</a></span>
+    <a href="/" data-bind="attr: { class: homeClass }">Home</a>
+  </div>
+</nav>

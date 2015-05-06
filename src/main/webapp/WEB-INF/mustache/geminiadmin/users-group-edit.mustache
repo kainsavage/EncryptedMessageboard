@@ -1,0 +1,31 @@
+{{</geminiadmin/admin-layout}}
+{{$subtitle}}List User Groups{{/subtitle}}
+{{$sub}}<a href="/geminiadmin/users/group-list">Group List</a>{{/sub}}
+{{$auxCss}}<link rel="stylesheet" href="{{app.path.css}}geminiadmin/admin-dashboard.css" />{{/auxCss}}
+{{$adminjs}}<script type="text/javascript">
+
+</script>{{/adminjs}}
+{{$adminbody}}
+
+<h2>User Group</h2>
+
+{{>/geminiadmin/include-validation}}
+{{#req}}
+<form id="groupedit" action="{{baseUri}}/users-group-edit" method="post">
+{{#form}}
+{{#map}}
+{{{id}}}
+
+<div class="admin-form">
+<div class="row wxl"><label for="name">Name</label>{{{name}}}</div>
+<div class="row wxl"><label for="description">Description</label>{{{description}}}</div>
+<div class="actions">{{{save}}}</div>
+</div>
+
+</form>
+{{/map}}
+{{/form}}
+{{/req}}
+
+{{/adminbody}}
+{{//geminiadmin/admin-layout}}

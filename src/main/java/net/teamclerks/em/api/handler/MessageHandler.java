@@ -1,27 +1,33 @@
 package net.teamclerks.em.api.handler;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-import net.teamclerks.em.*;
-import net.teamclerks.em.api.entity.*;
-import net.teamclerks.em.api.form.*;
-import net.teamclerks.em.auth.entity.*;
+import net.teamclerks.em.EMApplication;
+import net.teamclerks.em.EMContext;
+import net.teamclerks.em.api.entity.Message;
+import net.teamclerks.em.api.form.MessageForm;
+import net.teamclerks.em.auth.entity.User;
 
-import com.google.common.collect.*;
-import com.techempower.gemini.form.*;
-import com.techempower.gemini.path.*;
-import com.techempower.gemini.path.annotation.*;
+import com.google.common.collect.Maps;
+import com.techempower.cache.EntityStore;
+import com.techempower.gemini.form.FormValidation;
+import com.techempower.gemini.path.MethodSegmentHandler;
+import com.techempower.gemini.path.annotation.PathSegment;
 
-public class MessageHandler extends MethodPathHandler<EMContext>
+public class MessageHandler
+     extends MethodSegmentHandler<EMContext>
 {
   private final EMApplication application;
-  private final EMStore   store;
+  private final EntityStore   store;
 
   public MessageHandler(EMApplication app)
   {
     super(app);
     this.application = app;
-    this.store = (EMStore)this.application.getStore();
+    this.store = this.application.getStore();
   }
 
   @PathSegment

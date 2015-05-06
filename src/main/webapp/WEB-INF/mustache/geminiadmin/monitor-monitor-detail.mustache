@@ -1,0 +1,275 @@
+{{</geminiadmin/admin-layout}}
+{{$subtitle}}CPU Usage Monitoring{{/subtitle}}
+{{$sub}}{{#req}}{{>/geminiadmin/monitor-subnav}}{{/req}}{{/sub}}
+{{$adminjs}}
+{{#req}}
+<script src="{{app.path.js}}external/jquery.flot.js"></script>
+<script src="{{app.path.js}}external/jquery.flot.selection.js"></script>
+<script src="{{app.path.js}}external/jquery.flot.crosshair.js"></script>
+<script src="{{app.path.js}}external/jquery.flot.stack.js"></script>
+<script>
+
+var svUrl = '{{baseUri}}',
+    mc = {{{MC}}},
+    h = {{{history}}},
+    interval = {{intervalLength}},
+    timezoneShift = {{timezoneShift}},
+    count = [],
+    avglg = [],
+    avgqr = [],
+    avgqe = [],
+    avgqt = [],
+    avgrn = [],
+    avgsp = [],
+    worlg = [],
+    worqr = [],
+    worqe = [],
+    worqt = [],
+    worrn = [],
+    worsp = [],
+    lastTime;
+
+for (var i = 0; i < h.length; i++) {
+  if (h[i] != null) {
+    lastTime = h[i].time + timezoneShift;
+    count[i] = [lastTime, h[i].count];
+    avglg[i] = [lastTime, h[i].avglg - (h[i].avgqt + h[i].avgsp)];
+    avgqr[i] = [lastTime, h[i].avgqr];
+    avgqt[i] = [lastTime, h[i].avgqt];
+    avgrn[i] = [lastTime, h[i].avgrn];
+    avgsp[i] = [lastTime, h[i].avgsp];
+    worlg[i] = [lastTime, h[i].worlg - (h[i].worqt + h[i].worsp)];
+    worqr[i] = [lastTime, h[i].worqr];
+    worqt[i] = [lastTime, h[i].worqt];
+    worrn[i] = [lastTime, h[i].worrn];
+    worsp[i] = [lastTime, h[i].worsp];
+  }
+}
+
+function insertZeroData(start, end, iteration, timeAdjust) {
+  var lastTime = 0;
+
+  for (var i = start; i != end; i += iteration) {
+    if (h[i] != null) {
+      lastTime = h[i].time + timezoneShift;
+    }
+    else if (lastTime > 0) {
+      lastTime += timeAdjust;
+      count[i] = [lastTime, 0];
+      avglg[i] = [lastTime, 0];
+      avgqr[i] = [lastTime, 0];
+      avgqt[i] = [lastTime, 0];
+      avgrn[i] = [lastTime, 0];
+      avgsp[i] = [lastTime, 0];
+      worlg[i] = [lastTime, 0];
+      worqr[i] = [lastTime, 0];
+      worqt[i] = [lastTime, 0];
+      worrn[i] = [lastTime, 0];
+      worsp[i] = [lastTime, 0];
+    }
+  }
+}
+
+insertZeroData(0, h.length, 1, -interval);
+insertZeroData(h.length - 1, -1, -1, interval);
+
+var reqOptions = {
+  xaxis: { mode: "time", timeformat: "%m-%d %h:%M"},
+  legend: { position: "nw" },
+  yaxis: { labelWidth: 40, min: 0, minTickSize: 1, tickDecimals: 0 },
+  y2axis: { labelWidth: 25, min: 0, minTickSize: 1, tickDecimals: 0 },
+  selection: { mode: "x" },
+  colors: [ "#5060F0" ],
+  grid: { hoverable: true, backgroundColor: { colors: ["#FFF", "#FFF", "#FFF", "#F0F4F8"] },
+  series: { stack: false } }
+};
+
+var mainOptions = {
+  series: {
+    bars: { show: true, barWidth: 60 * 60 * 1000, align: "center" }
+    },
+  xaxis: { mode: "time", timeformat: "%m-%d %h:%M" },
+  legend: {
+    position: "nw", noColumns: 2, container: "#legend",
+    labelFormatter: function(label, series) {
+        var index = 0; switch (series.data) { case (worqt): index = 0; break; case (worlg): index = 1; break; case (worrn): index = 2; break; case (worqr): index = 4; break; case (worsp): index = 3; break; }
+        return '<a href="javascript:toggleSeries(' + index + ')">' + label + '</a>';
+      }
+    },
+  yaxis: { labelWidth: 40, min: 0, minTickSize: 1, tickFormatter: function (v, axis) { return v + " ms"; } },
+  y2axis: { labelWidth: 25, min: 0, minTickSize: 1, tickFormatter: function (v, axis) { return v + "q"; } },
+  selection: { mode: "x" },
+  colors: [ "#5060F0" ],
+  grid: { hoverable: true, backgroundColor: { colors: ["#FFF", "#FFF", "#FFF", "#F0F4F8"] } }
+};
+
+var hits =
+  [{ label: 'Requests', data: count, stack: false }];
+
+var averages =
+  [{ label: 'Query time (ms)', data: avgqt, stack: true },
+   { label: 'Logic time (ms)', data: avglg, stack: true },
+   { label: 'Render time (ms)', data: avgrn, stack: true },
+   { label: 'Special time (ms)', data: avgsp, stack: true },
+   { label: 'Queries', data: avgqr, yaxis: 2, lines: { show: true }, bars: { show: false }, stack: false }
+  ];
+
+var worst =
+  [{ label: 'Query time (ms)', data: worqt, stack: true },
+   { label: 'Logic time (ms)', data: worlg, stack: true },
+   { label: 'Render time (ms)', data: worrn, stack: true },
+   { label: 'Special time (ms)', data: worsp, stack: true },
+   { label: 'Queries', data: worqr, yaxis: 2, lines: { show: true }, bars: { show: false }, stack: false }
+  ];
+
+var hitsPlot = $.plot($("#hits"), hits, reqOptions);
+var avgPlot = $.plot($("#averages"), averages, mainOptions);
+var worstPlot = $.plot($("#worst"), worst, mainOptions);
+
+$("#hits").bind("plotselected", function (event, ranges) {
+  avgPlot.setSelection(ranges);
+  worstPlot.setSelection(ranges);
+});
+
+$("#averages").bind("plotselected", function (event, ranges) {
+  // do the zooming
+  avgPlot = $.plot($("#averages"), averages,
+    $.extend(true, {}, mainOptions, {
+      xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
+    }));
+});
+
+$("#worst").bind("plotselected", function (event, ranges) {
+  // do the zooming
+  worstPlot = $.plot($("#worst"), worst,
+    $.extend(true, {}, mainOptions, {
+      xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
+    }));
+});
+
+function toggleSeries(index) {
+  togglePlotSeries(avgPlot, index);
+  togglePlotSeries(worstPlot, index);
+}
+
+function togglePlotSeries(plotRef, seriesNumber) {
+  var series = plotRef.getData();
+  var plotType = series[seriesNumber].plotType;
+  if (plotType == null) {
+    if (series[seriesNumber].lines.show) {
+      plotType = 0;
+    }
+    else if (series[seriesNumber].bars.show) {
+      plotType = 1;
+    }
+    series[seriesNumber].plotType = plotType;
+  }
+
+  if (plotType == 0) {
+    var show = series[seriesNumber].lines.show;
+    series[seriesNumber].lines.show = !show;
+  }
+  else if (plotType == 1) {
+    var show = series[seriesNumber].bars.show;
+    series[seriesNumber].bars.show = !show;
+  }
+  plotRef.draw();
+}
+
+var latestHover = null,
+    updateHoverTimeout = null,
+    latestHoverHistory = null;
+
+function updateHover() {
+  updateHoverTimeout = null;
+
+  var hover = latestHover;
+  if (hover != null) {
+    var content = "";
+    var hist = h[hover.dataIndex];
+
+    if ((hist != latestHoverHistory) && (hist != null)) {
+      latestHoverHistory = hist;
+      content += "<table class='admin-table' width='100%'><tr><th colspan='2'>" + gba.standardDateString(new Date(hist.time)) + "</th></tr>"
+        + "<tr><td class='numeric'>" + hist.count + "</td><td class='item'>Requests</td></tr>"
+        + "<tr class='sub'><th colspan='2'>Averages</th></tr>"
+        + "<tr><td class='numeric'>" + hist.avgdisp + "</td><td class='item'>Dispatches</td></tr>"
+        + "<tr><td class='numeric'>" + hist.avgqr + "</td><td class='item'>Queries</td></tr>"
+        + "<tr><td class='numeric'>" + hist.avgqe + "</td><td class='item'>Query&nbsp;exceptions</td></tr>"
+        + "<tr><td class='numeric'>" + hist.avgqt + " ms</td><td class='item'>Query time</td></tr>"
+        + "<tr><td class='numeric'>" + hist.avgsp + " ms</td><td class='item'>Special time</td></tr>"
+        + "<tr><td class='numeric'>" + hist.avglg + " ms</td><td class='item'>Logic time</td></tr>"
+        + "<tr><td class='numeric'>" + hist.avgrn + " ms</td><td class='item'>Render time</td></tr>"
+        + "<tr><td class='numeric'>" + hist.avgto + " ms</td><td class='item'>Total time</td></tr>"
+        + "<tr class='sub'><th colspan='2'>Worst</th></tr>"
+        + "<tr><td class='numeric'>" + hist.worqr + "</td><td class='item' id='qc'>Queries</td></tr>"
+        + "<tr><td class='numeric'>" + hist.worqe + "</td><td class='item' id='qe' width='50%'>Query&nbsp;exceptions</td></tr>"
+        + "<tr><td class='numeric'>" + hist.worqt + " ms</td><td class='item' id='qt'>Query time</td></tr>"
+        + "<tr><td class='numeric'>" + hist.worsp + " ms</td><td class='item' id='st'>Special time</td></tr>"
+        + "<tr><td class='numeric'>" + hist.worlg + " ms</td><td class='item' id='lt'>Logic time</td></tr>"
+        + "<tr><td class='numeric'>" + hist.worrn + " ms</td><td class='item' id='rt'>Render time</td></tr>"
+        + "</table>";
+      $("#hover").html(content);
+
+      $.ajax({
+        url: svUrl + "?cmd=admin-monitor-sigs&command={{command}}&interval=" + hover.dataIndex,
+        dataType: 'json',
+        type: 'get',
+        data: {},
+        success: function(data) {
+            if (data.sigs) {
+              if (data.sigs.qc)
+                $("#hover #qc").html("<a href='" + data.sigs.qc + "'>Queries</a>");
+              if (data.sigs.qe)
+                $("#hover #qe").html("<a href='" + data.sigs.qe + "'>Query exceptions</a>");
+              if (data.sigs.qt)
+                $("#hover #qt").html("<a href='" + data.sigs.qt + "'>Query time</a>");
+              if (data.sigs.st)
+                $("#hover #st").html("<a href='" + data.sigs.st + "'>Special time</a>");
+              if (data.sigs.lt)
+                $("#hover #lt").html("<a href='" + data.sigs.lt + "'>Logic time</a>");
+              if (data.sigs.rt)
+                $("#hover #rt").html("<a href='" + data.sigs.rt + "'>Render time</a>");
+            }
+          }
+        });
+    }
+  }
+}
+
+function hover(event, pos, item) {
+  latestHover = item;
+  if (!updateHoverTimeout)
+    updateHoverTimeout = setTimeout(updateHover, 250);
+}
+
+$("#hits").bind("plothover", hover);
+$("#averages").bind("plothover", hover);
+$("#worst").bind("plothover", hover);
+
+</script>
+{{/req}}
+{{/adminjs}}
+{{$adminbody}}
+
+{{#req}}
+<h2>Performance Monitoring for {{command}}</h2>
+
+<table>
+<tr><td style="padding-right: 20px;" rowspan="2">
+<div id="hits" style="width:490px;height:100px;"></div>
+<h3>Averages</h3>
+<div id="averages" style="width:490px;height:200px;"></div>
+<h3>Exceptional Cases</h3>
+<div id="worst" style="width:490px;height:200px;"></div>
+</td><td style="border-left: 1px solid #C0C0D0; padding-left: 20px; vertical-align: top">
+<div id="hover" style="width: 200px;">-- No selection --</div>
+<p style="color: #909090">Note that logic time above includes query time.</p>
+</td></tr><tr><td style="border-left: 1px solid #C0C0D0; padding-left: 20px; vertical-align: bottom">
+<div id="legend"></div>
+</td>
+</tr></table>
+{{/req}}
+
+{{/adminbody}}
+{{//geminiadmin/admin-layout}}

@@ -1,11 +1,19 @@
 package net.teamclerks.em.api.form;
 
-import net.teamclerks.em.*;
-import net.teamclerks.em.auth.*;
+import net.teamclerks.em.EMApplication;
+import net.teamclerks.em.EMContext;
+import net.teamclerks.em.auth.EMSecurity;
 
-import com.techempower.gemini.*;
-import com.techempower.gemini.form.*;
-import com.techempower.gemini.pyxis.*;
+import com.techempower.gemini.Context;
+import com.techempower.gemini.form.BasicForm;
+import com.techempower.gemini.form.Form;
+import com.techempower.gemini.form.FormCheckBox;
+import com.techempower.gemini.form.FormHidden;
+import com.techempower.gemini.form.FormPasswordField;
+import com.techempower.gemini.form.FormSingleValidation;
+import com.techempower.gemini.form.FormSubmitButton;
+import com.techempower.gemini.form.FormTextField;
+import com.techempower.gemini.form.FormValidator;
 
 public class LoginForm extends BasicForm
 {   
@@ -24,12 +32,10 @@ public class LoginForm extends BasicForm
     
     this.setName("LoginForm");
     
-    lhuser = new FormTextField("lhuser", true,
-        BasicUser.MAX_USERNAME_LENGTH, BasicUser.MAX_USERNAME_LENGTH);
+    lhuser = new FormTextField("lhuser", true, 100, 100);
     lhuser.setDisplayName("User name");
     
-    lhpass = new FormPasswordField("lhpass", "", true,
-        BasicUser.MAX_PASSWORD_LENGTH, BasicUser.MAX_PASSWORD_LENGTH);
+    lhpass = new FormPasswordField("lhpass", "", true, 100, 100);
     lhpass.setDisplayName("Password");
     
     lhremember = new FormCheckBox("lhremember", "", false, false);

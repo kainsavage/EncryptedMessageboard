@@ -1,12 +1,18 @@
 package net.teamclerks.em.api.entity;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
 
-import com.google.common.collect.*;
-import com.techempower.js.*;
-import com.techempower.util.*;
+import com.google.common.collect.Maps;
+import com.techempower.data.annotation.CachedEntity;
+import com.techempower.js.legacy.Visitor;
+import com.techempower.js.legacy.VisitorFactory;
+import com.techempower.js.legacy.Visitors;
+import com.techempower.util.Identifiable;
 
-public class Message implements Identifiable, Comparable<Message>
+@CachedEntity
+public class Message 
+  implements Identifiable, Comparable<Message>
 {
   public static final VisitorFactory<Message> visitorFactory =
       new VisitorFactory<Message>()

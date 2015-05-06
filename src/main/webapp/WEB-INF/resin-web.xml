@@ -1,0 +1,10 @@
+<!-- include items that are specific to resin but are not tied to a specific environment
+below. Environment specifc resin setup should be included in environment/{evironment}/resin.xml-->
+
+<web-app xmlns="http://caucho.com/ns/resin"
+         xmlns:resin="urn:java:com.caucho.resin">
+  <resin:Dispatch regexp="^/static/[0-9]+[a-zA-Z]*/(.+)$" target="/$1">
+    <resin:SetHeader name="Cache-Control" value="public, max-age=31556926" />
+    <resin:SetHeader regexp="^/static/[0-9]+[a-zA-Z]*/font/" name="Access-Control-Allow-Origin" value="*" />
+  </resin:Dispatch>
+</web-app>

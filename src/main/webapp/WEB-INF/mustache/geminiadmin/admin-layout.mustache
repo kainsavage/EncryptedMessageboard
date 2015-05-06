@@ -1,0 +1,25 @@
+{{</layout}}
+{{$title}}{{$subtitle}}{{/subtitle}} - Administration{{/title}}
+{{$css}}
+  {{#app.env.testOrProd}}
+    <link rel="stylesheet" type="text/css" href="{{app.path.css}}geminiadmin/geminiadmin.min.css" />
+  {{/app.env.testOrProd}}
+  {{#app.env.dev}}
+    <link rel="stylesheet" href="{{app.path.css}}geminiadmin/basicadmin.less" />
+    <link rel="stylesheet" type="text/css" href="{{app.path.css}}geminiadmin/admin-dashboard.css" />
+  {{/app.env.dev}}
+  {{$auxCss}}{{/auxCss}}
+{{/css}}
+{{$subnav}}<a href="{{req.baseUri}}">Menu</a>{{$sub}}{{/sub}}<div class="subnavedge"></div>{{/subnav}}
+{{$body}}<div class="admin-content" id="admin-content">{{$adminbody}}{{/adminbody}}</div>{{/body}}
+{{$js}}
+  {{#app.env.testOrProd}}
+    <script src="{{app.path.js}}geminiadmin/geminiadmin.min.js"></script>
+  {{/app.env.testOrProd}}
+  {{#app.env.dev}}
+    <script src="{{app.path.js}}geminiadmin/basicadmin.js"></script>
+    <script src="{{app.path.js}}geminiadmin/element-builder.js"></script>
+  {{/app.env.dev}}
+  {{$adminjs}}{{/adminjs}}
+{{/js}}
+{{//layout}}

@@ -1,0 +1,37 @@
+
+table#list
+{
+  float: left;
+}
+div#rightside
+{
+  float: right;
+  background-color: rgb(250,252,254);
+  border: 2px solid rgb(150,152,154);
+  margin: 0px 0px 10px 0px;
+}
+div#detailbanner
+{
+  padding: 1px 6px 1px 6px;
+  font-weight: bold;
+  border-bottom: 1px solid rgb(150,152,154);
+}
+div#detail
+{
+  min-width: 400px;
+  padding: 6px 6px;
+  font-family: monospace;
+  white-space: pre;
+}
+tr.selected td
+{
+  background-color: rgb(250,240,130);
+}
+tr.high td
+{
+  color: rgb(140,0,0);
+}
+tr.low td
+{
+  color: rgb(100,100,100);
+}

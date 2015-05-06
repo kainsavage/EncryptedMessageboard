@@ -1,0 +1,30 @@
+<div class="content-column">
+  <nav class="subnav">
+
+  </nav>
+  <div class="contentcontainer">
+    <p>Welcome to <b>[TODO]</b>.  Please login below.</p>
+
+    <form name="login-form" data-bind="submit: login">
+      <input type="hidden" name="r" id="r" value="">
+      <div class="form-container centered-400 peach">
+        <div class="validation form-row" data-bind="visible: showValidation">
+          <div class="validation-instruction" data-bind="text: validationError"></div>
+        </div>
+        <div class="form-row">
+          <input type="text" length="100" maxlength="100" data-bind="value: lhuser"><label class="label" for="lhuser">Username</label>
+        </div>
+        <div class="form-row">
+          <input type="password" name="lhpass" id="lhpass" value="" length="30" maxlength="30" data-bind="value: lhpass"><label class="label" for="lhpass">Password</label>
+        </div>
+        <div class="form-row">
+          <span class="label"></span><input type="submit" name="lhlogin" id="lhlogin" value="Login">
+          <span class="modifier"><input type="checkbox" id="lhremember" name="lhremember" value="y"><label class="label" for="lhremember">Remember me</label></span>
+        </div>
+      </div>
+    </form>
+
+    <p>Forgot your password?  <a href="/password-reset">Reset it</a>.</p>
+
+  </div>
+</div>

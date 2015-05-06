@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-  EncryptedMessageboard web.xml
+  TestApplication web.xml
 
 -->
 <web-app>
 
   <!-- Force static assets to be served by the servlet container. -->
+  <servlet-mapping>
+    <url-pattern>/</url-pattern>
+    <servlet-name>default</servlet-name>
+  </servlet-mapping>
   <servlet-mapping>
     <url-pattern>/css/*</url-pattern>
     <servlet-name>default</servlet-name>
@@ -88,7 +92,7 @@
        cluster master to receive its configuration. -->
   <!--
   <servlet>
-    <servlet-name>EM</servlet-name>
+    <servlet-name>Ta</servlet-name>
     <init-param>
       <param-name>ClusterClient.TransportClassname</param-name>
       <param-value>com.techempower.gemini.cluster.transport.kryonet.KryoClientTransport</param-value>
@@ -109,11 +113,11 @@
   -->
   
   <servlet>
-    <servlet-name>EMServlet</servlet-name>
+    <servlet-name>EmServlet</servlet-name>
     <servlet-class>net.teamclerks.em.EMServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>EMServlet</servlet-name>
+    <servlet-name>EmServlet</servlet-name>
     <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
   

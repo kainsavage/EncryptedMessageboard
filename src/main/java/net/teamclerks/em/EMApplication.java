@@ -8,17 +8,27 @@
 
 package net.teamclerks.em;
 
-import net.teamclerks.em.api.handler.*;
-import net.teamclerks.em.auth.*;
+import net.teamclerks.em.admin.handler.EMGeminiAdminHandler;
+import net.teamclerks.em.api.handler.MessageHandler;
+import net.teamclerks.em.api.handler.ProfileHandler;
+import net.teamclerks.em.api.handler.UserHandler;
+import net.teamclerks.em.auth.EMSecurity;
 
-import com.techempower.*;
-import com.techempower.cache.*;
-import com.techempower.gemini.*;
-import com.techempower.gemini.email.outbound.*;
-import com.techempower.gemini.exceptionhandler.*;
-import com.techempower.gemini.path.*;
-import com.techempower.gemini.path.annotation.*;
-import com.techempower.gemini.pyxis.*;
+import com.techempower.Version;
+import com.techempower.gemini.Dispatcher;
+import com.techempower.gemini.Request;
+import com.techempower.gemini.ResinGeminiApplication;
+import com.techempower.gemini.email.outbound.EmailTemplater;
+import com.techempower.gemini.exceptionhandler.BasicExceptionHandler;
+import com.techempower.gemini.exceptionhandler.NotificationExceptionHandler;
+import com.techempower.gemini.path.DispatchSegment;
+import com.techempower.gemini.path.MethodUriHandler;
+import com.techempower.gemini.path.PathDispatcher;
+import com.techempower.gemini.path.annotation.Path;
+import com.techempower.gemini.pyxis.PyxisSecurity;
+import com.techempower.gemini.pyxis.handler.LoginHandler;
+import com.techempower.gemini.pyxis.handler.LogoutHandler;
+import com.techempower.gemini.pyxis.handler.PasswordResetHandler;
 
 /**
  * EMApplication.  As a subclass of GeminiApplication, this
@@ -31,7 +41,7 @@ import com.techempower.gemini.pyxis.*;
  * @author (username)
  */
 public class EMApplication
-     extends GeminiApplication
+     extends ResinGeminiApplication
 //  implements PyxisApplication
 {
 
@@ -99,12 +109,6 @@ public class EMApplication
   {
     return new EMSecurity(this);
   }
-  
-  @Override
-  protected EntityStore constructEntityStore()
-  {    
-    return new EMStore(this, getConnectorFactory());
-  }
 
   /**
    * Constructs a Dispatcher.
@@ -117,21 +121,23 @@ public class EMApplication
 
     final UserHandler          userHandler = new UserHandler(this);
     final ProfileHandler       profileHandler = new ProfileHandler(this);
-    final PasswordResetHandler pwHandler = new PasswordResetHandler(this);
     final MessageHandler       messageHandler = new MessageHandler(this);
         
     config
           .add("api",new DispatchSegment<EMContext>()
+            .add("login", new LoginHandler<EMContext>(this))
+            .add("logout", new LogoutHandler<EMContext>(this))
+            .add("password-reset", new PasswordResetHandler<EMContext>(this))
+            .add("admin", new EMGeminiAdminHandler(this))
+            
             .add("user", userHandler)
-            .add("password", pwHandler)
-            .add("profile", profileHandler)
             .add("message", messageHandler)
           )
           .add(getMonitor().getListener())
           .add(new BasicExceptionHandler(this))
           .add(new NotificationExceptionHandler(this))
-          .setDefault(new MethodPathHandler<EMContext>(this) {
-            @PathDefault
+          .setDefault(new MethodUriHandler<EMContext>(this) {
+            @Path("*")
             public boolean everything()
             {
               return notFound("File not found.");

@@ -1,0 +1,490 @@
+//
+// Standard style-sheet for the basic administration section.
+//
+
+@import "../standard-mixins.less";
+@import "colors-and-fonts.less";
+
+// The main administrative content div.
+.admin-content {
+  .boxsizing(border-box);
+  font-family: @adminFont;
+  font-size: @adminFontSize;
+  line-height: 1.2em;
+  min-height: 450px;
+  
+  a,
+  .anchor {
+    color: @anchorFg;
+    background-color: @anchorBg;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover,
+    &:visited:hover {
+      color: @anchorHoverFg;
+      background-color: @anchorHoverBg;
+    }
+    
+    &:visited {
+      color: @anchorVisitedFg;
+      background-color: @anchorVisitedBg;
+    }
+    
+    &.button {
+      background-color: @bgInput;
+      padding: 0px 4px;
+      text-decoration: none;
+    }
+  }
+  
+  input, 
+  select, 
+  textarea {
+    border: @borderInput;
+    color: @fgInput;
+    background-color: @bgInput;
+    background-image: none;
+    box-shadow: @shadowInput;
+    font-family: @adminFont;
+    font-size: @adminFontSize;
+    .boxsizing(border-box);
+    .transition(all, 0.3s);
+    margin: 0 0;
+    
+    &:hover {
+      border: @borderInputHover;
+      background-color: @bgInputHover;
+      box-shadow: @shadowInputHover;
+    }
+    
+    &:focus {
+      border: @borderInputFocus;
+      color: @fgInputFocus;
+      box-shadow: @shadowInputFocus;
+      background-color: @bgInputFocus;
+      background-image: none;
+    }
+  }
+  
+  .admin-menu {
+    margin: 0;
+    .columns(2, 10px);
+    
+    .admin-menu-section {
+      position: relative;
+      padding: 0;
+      margin: 0 0 10px 0;
+      
+      .admin-menu-banner {
+        font-size: @adminFontSizeBanner;
+        color: #303040;
+        margin: 0px 0px 1px 5px;
+        line-height: 18px;
+      }
+  
+      .admin-menu-options {
+        border-top: 1px solid #DDDDEE;
+        position: relative;
+        background-color: #F8F8FF;
+        z-index: 1;
+        font-size: @adminFontSize;
+        
+        .admin-menu-option-name {
+          padding: 1px 6px 1px 1px;
+          vertical-align: top;
+          
+          .admin-menu-button {
+            display: inline-block;
+            width: 120px;
+            border: 1px solid @borderTable;
+            background-color: @bgData;
+            color: @fgData;
+            text-decoration: none;
+            padding: 0px 0px 0px 4px;
+            line-height: 16px;
+            .transition(all, 0.15s);
+            
+            &:hover {
+              color: @fgLabelAlternate;
+              background-color: @bgLabelAlternate;
+              border-color: @fgLabelAlternate;
+            }
+          }
+        }
+        
+        .admin-menu-option-description {
+          color: @fgInput;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+  
+  .threadlist {
+    .highpri {
+      background-color: #FFE8E8;
+    }
+    .lowpri {
+      background-color: #E0FFF0;
+    }
+    .medpri {
+      background-color: #E0F0FF;
+    }
+    .pausepending {
+      background-color: #C0B0B0;
+    }
+    .paused {
+      background-color: #706060;
+      color: white;
+    }
+  }
+
+  .alert {
+    color: #FF0000;
+  }
+  
+  .smalltext {
+    font-size: @adminFontSizeSmall;
+  }
+
+  .validation {
+    .validation-item {
+      color: @validationFg;
+      background-color: @validationBg;
+    }
+  }
+
+  .nowrap {
+    text-wrap: avoid;
+    white-space: nowrap;
+  }
+  
+  clear {
+    clear: both;
+  }
+  
+  .exceptional {
+    color: #C00000 !important;
+    box-shadow: 0px 0px 2px rgba(255,0,0,0.5) inset;
+    background-color: #FFE0E0;
+  }
+}
+
+// Forms for the admin site.
+.admin-form {
+  .row {
+    border-bottom: @formRowBorder;
+    padding: 2px 0px;
+    
+    &:first-of-type {
+      border-top: @formRowBorder;
+    }
+    
+    label {
+      display: inline-block;
+      width: 150px;
+      vertical-align: top;
+      line-height: 20px;
+    }
+    
+    input[type='checkbox'] {
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+    
+    input[type='text'],
+    input[type='password'],
+    select,
+    textarea {
+      width: 200px;
+      margin-right: 2px;
+    }
+    
+    &.wxxs {
+      input[type='text'],
+      input[type='password'],
+      select,
+      textarea {
+        width: 35px;
+      }
+    }
+    
+    &.wxs {
+      input[type='text'],
+      input[type='password'],
+      select,
+      textarea {
+        width: 50px;
+      }
+    }
+    
+    &.ws {
+      input[type='text'],
+      input[type='password'],
+      select,
+      textarea {
+        width: 100px;
+      }
+    }
+    
+    &.wl {
+      input[type='text'],
+      input[type='password'],
+      select,
+      textarea {
+        width: 300px;
+      }
+    }
+    
+    &.wxl {
+      input[type='text'],
+      input[type='password'],
+      select,
+      textarea {
+        width: 400px;
+      }
+    }
+  }
+  
+  .actions {
+    margin-top: 5px;
+    background-color: @bgHeader;
+    padding: 6px 150px;
+    
+    input[type='button'],
+    input[type='submit'],
+    .button {
+      font-size: @adminFontSizeLarge;
+      min-width: 100px;
+      border-width: 2px;
+      height: 30px;
+    }
+  }
+}
+
+// Data tables for the admin site.
+.admin-table {
+  border: 2px solid @borderTable;
+  border-spacing: 0px;
+  padding: none;
+  
+  th {
+    background-color: @bgHeader;
+    color: @fgHeader;
+    border-bottom: 1px solid @borderHeader;
+    font-weight: bold;
+    text-align: left;
+  }
+  
+  tr.sub {
+    th {
+      padding-top: 12px;
+    }
+  }
+  
+  tr {
+    background-color: @bgData;
+    &:hover {
+      background-color: white;
+    }
+    &:nth-child(odd) {
+      background-color: @bgDataAlternate;
+      &:hover {
+        background-color: white;
+      }
+      color: @fgDataAlternate;
+      
+      td.label {
+        background-color: @bgLabelAlternate;
+        color: @fgLabelAlternate;
+      }
+      
+      td.item {
+        background-color: white;
+      }
+    }
+  }
+  
+  td {
+    color: @fgData;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+  }
+  
+  td, th {
+    padding: 1px 4px;
+    
+    &.numeric, &.actions {
+      text-align: right;
+    }
+    
+    &.label {
+      background-color: @bgLabel;
+      color: @fgLabel;
+      text-align: right;
+      border-right: 1px solid @borderLabel;
+      padding: 1px 8px;
+    }
+    
+    &.item {
+      background-color: white;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+  }
+}
+
+// Horizontal forms such as used in the user-list.
+.horizontal-form {
+  ol {
+    list-style: none;
+    padding-left: 0px;
+    
+    li {
+      float: left;
+      margin-right: 6px;
+      
+      div.cell {
+        height: 20px;
+        margin: 1px 0px;
+      }
+    }
+  }
+  
+  label {
+    font-size: 10px;
+    color: @fgInput;
+  }
+  
+  label,
+  input {
+    display: block;
+    padding: 1px 1px;
+  }
+  
+  input:focus ~ label {
+    color: @fgInputFocus;
+  }
+  
+  input {
+    height: 22px;
+  }
+}
+
+// User list filter form.
+.user-list-form {
+  input[type=text],
+  select {
+    width: 150px;
+  }
+}
+
+// Confirmation dialog.
+.admin-confirm {
+  width: 400px;
+  color: black;
+  font-family: @adminFont;
+  font-size: @adminFontSize;
+
+  .admin-confirm-desc {
+    text-align: left;
+    padding: 5px 5px 5px 5px;
+  }
+  
+  .admin-confirm-link {
+    text-align: left;
+    padding: 5px 5px 10px 5px;
+  }
+  
+  .admin-confirm-auxmessage {
+    text-align: left;
+    font-weight: bold;
+    background-color: #F0F0F0;
+    padding: 4px 4px 4px 4px;
+    border: 3px solid red;
+    color: black;
+  }
+  
+  .admin-confirm-banner {
+    padding: 5px 5px;
+    text-align: center;
+    font-family: @adminFont;
+    font-size: @adminFontSizeXLarge;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .admin-confirm-action {
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 4px;
+    color: white;
+  }
+
+  .admin-confirm-link a {
+    padding: 2px 10px 2px 10px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    
+    &:hover {
+      color: white;
+    }
+  }
+
+  // Confirmation for high-severity actions.  Red in color.
+  &.severity10 {
+    border: 1px solid #EE6666;
+    background-color: #FFE8E8;
+    
+    .admin-confirm-banner,
+    .admin-confirm-action {
+      background-color: #EE6666;
+    }
+
+    .admin-confirm-link a {
+      border: 1px solid #EE6666;
+      
+      &:hover {
+        background-color: #EE6666;
+      }
+    }
+  }
+
+  // Confirmation for medium-severity actions.  Green in color.
+  &.severity5 {
+    border: 1px solid #669966;
+    background-color: #EEFFEE;
+    
+    .admin-confirm-banner,
+    .admin-confirm-action {
+      background-color: #669966;
+    }
+    
+    .admin-confirm-link a {
+      border: 1px solid #669966;
+      
+      &:hover {
+        background-color: #669966;
+      }
+    }
+  }
+
+  // Confirmation for low-severity actions.  Blue in color.
+  &.severity0 {
+    border: 1px solid #226699;
+    background-color: #DDEEFF;
+    
+    .admin-confirm-banner,
+    .admin-confirm-action {
+      background-color: #226699;
+    }
+
+    .admin-confirm-link a {
+      border: 1px solid #226699;
+      
+      &:hover {
+        background-color: #226699;
+      }
+    }
+  }
+}

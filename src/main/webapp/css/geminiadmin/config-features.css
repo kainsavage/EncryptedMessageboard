@@ -1,0 +1,114 @@
+
+div.features
+{
+  width: 550px;
+}
+
+div.fn
+{
+  clear: both;
+  border-bottom: 1px solid rgb(220,220,230);
+  margin: 4px 0px 4px 0px;
+}
+
+div.fnn
+{
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 10px;
+  padding: 2px 0px 2px 0px;
+}
+
+div.fnc.disabled div.fnn
+{
+  text-decoration: line-through;
+  color: rgb(130,130,140);
+}
+
+div.fnd
+{
+  display: inline;
+}
+
+div.fnc.disabled div.fnd
+{
+  text-decoration: line-through;
+  color: rgb(130,130,140);
+}
+
+div.fnctrl
+{
+  float: right;
+}
+
+div.fnctrl a
+{
+  display: inline-block;
+  margin: 0px 0px 0px 4px;
+  padding: 2px 2px 2px 2px;
+  text-decoration: none;
+  color: black;
+  text-align: center;
+  width: 60px;
+}
+
+div.fnctrl a.enable
+{
+  background-color: rgb(200,200,250);
+}
+
+div.fnctrl a.enable.sel
+{
+  background-color: rgb(50,50,255);
+  color: white;
+  font-weight: bold;
+}
+
+div.fnc.disabled div.fnctrl a.enable
+{
+  background-color: rgb(240,240,255);
+}
+
+div.fnc.disabled div.fnctrl a.enable.sel
+{
+  background-color: rgb(190,190,255);
+  color: white;
+  font-weight: bold;
+}
+
+div.fnctrl a.disable
+{
+  background-color: rgb(250,200,200);
+}
+
+div.fnctrl a.disable.sel
+{
+  background-color: rgb(255,50,50);
+  color: white;
+  font-weight: bold;
+}
+
+div.fnc.disabled div.fnctrl a.disable
+{
+  background-color: rgb(255,240,240);
+}
+
+div.fnc.disabled div.fnctrl a.disable.sel
+{
+  background-color: rgb(255,190,190);
+  color: white;
+  font-weight: bold;
+}
+
+div.fnc
+{
+  padding-left: 20px;
+}
+
+textarea.config
+{
+  width: 550px;
+  height: 100px;
+  font-size: 14px;
+  font-family: Consolas, Courier, Fixed;
+}

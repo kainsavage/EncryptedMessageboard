@@ -8,14 +8,17 @@
 
 package net.teamclerks.em.auth.entity;
 
-import java.util.*;
+import java.util.Map;
 
-import net.teamclerks.em.*;
+import net.teamclerks.em.EMApplication;
 
-import com.google.common.collect.*;
-import com.techempower.data.annotation.*;
-import com.techempower.gemini.pyxis.*;
-import com.techempower.js.*;
+import com.google.common.collect.Maps;
+import com.techempower.data.annotation.CachedEntity;
+import com.techempower.gemini.pyxis.BasicSecurity;
+import com.techempower.gemini.pyxis.BasicWebUser;
+import com.techempower.js.legacy.Visitor;
+import com.techempower.js.legacy.VisitorFactory;
+import com.techempower.js.legacy.Visitors;
 
 /**
  * Represents a user of the EncryptedMessageboard application.  Basic attributes

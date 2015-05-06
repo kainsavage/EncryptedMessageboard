@@ -35,7 +35,7 @@ public class EMSecurity
    */
   public EMSecurity(GeminiApplication application)
   {
-    super(application, User.class, Group.class);
+    super(application, User.class, Group.class, UserToGroup.class);
   }
 
   /**

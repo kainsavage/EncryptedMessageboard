@@ -1,0 +1,35 @@
+{{</geminiadmin/admin-layout}}
+{{$subtitle}}Administrative Notifications{{/subtitle}}
+{{$sub}}{{/sub}}
+{{$auxCss}}<link rel="stylesheet" href="{{app.path.css}}geminiadmin/admin-notifications.css" />{{/auxCss}}
+{{$adminjs}}<script type="text/javascript">
+gba.renderNotifications({{{req.jsNotifications}}});
+</script>{{/adminjs}}
+{{$adminbody}}
+
+{{#req}}
+<h2>Administrative Notifications</h2>
+
+<table id="list" class="admin-table">
+<tr>
+  <th colspan="2">Time / Severity</th>
+  <th>Synopsis</th>
+  <th>Source</th>
+</tr>
+<tbody id="not">
+<tr>
+  <td colspan="4" align="center">-- No notifications captured yet --</td>
+</tr>
+</tbody>
+</table>
+
+<div id="rightside">
+  <div id="detailbanner">Detail</div>
+  <div id="detail">
+  </div>
+</div>
+
+{{/req}}
+
+{{/adminbody}}
+{{//geminiadmin/admin-layout}}

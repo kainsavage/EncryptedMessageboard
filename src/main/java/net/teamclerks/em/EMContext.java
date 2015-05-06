@@ -19,7 +19,7 @@ import com.techempower.gemini.*;
  * @author (username)
  */
 public class EMContext
-     extends Context
+     extends ResinContext
 {
 
   //

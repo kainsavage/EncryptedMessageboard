@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<head>
+<title>{{ app.env.naame }} Log [{{ app.env.descriptor }}]</title>
+<link rel="stylesheet" href="{{app.path.css}}geminiadmin/admin-notifications.css" />
+<link rel="stylesheet" href="{{app.path.css}}geminiadmin/basicadmin-logmonitor.css" />
+</head>
+<body>
+ 
+<div id='banner'>
+  {{ app.env.name }} [{{ app.env.descriptor }}]<br/>
+  <span id='channel'>
+  </span><br/>
+  <span id='stats'>
+    <span id='displayed'>0</span> displayed; <span id='captured'>0</span> captured
+  </span><br/>
+  <span id='levels'>
+    <a href="javascript:void(0)" id="t0" class="level" data-level="0">0</a>
+    <a href="javascript:void(0)" id="t10" class="level" data-level="10">10</a>
+    <a href="javascript:void(0)" id="t30" class="level selected" data-level="30">30</a>
+    <a href="javascript:void(0)" id="t50" class="level" data-level="50">50</a>
+    <a href="javascript:void(0)" id="t70" class="level" data-level="70">70</a>
+    <a href="javascript:void(0)" id="t90" class="level" data-level="90">90</a>
+    <a href="javascript:void(0)" id="t100" class="level" data-level="100">100</a>
+  </span>
+  <span id='controls'>
+    <input name='filter' id='filter' value='' />
+    <a href="javascript:void(0)" id='togglecapture'>Pause</a>
+    <a href="javascript:void(0)" id='toggletrack' class='selected'>Follow</a>
+  </span>
+</div>
+
+<div id="log"><table cellpadding="0" cellspacing="0"><tbody id="logdata"></tbody></table></div>
+
+{{#req}}
+<script src="{{app.path.js}}external/jquery.js"></script>
+<script src="{{app.path.js}}geminiadmin/element-builder.js"></script>
+<script src="{{app.path.js}}geminiadmin/basicadmin.js"></script>
+<script src="{{app.path.js}}geminiadmin/basicadmin-logmonitor.js"></script>
+<script type="text/javascript">
+$(function(){
+  var svUrl = '{{baseUri}}/monitor/log-monitor',
+      channelID = {{ChannelID}},
+      channels = {{{Channels}}};
+
+  logmonitor.init(svUrl, channelID, channels);
+});
+</script>
+{{/req}}
+ 
+</body>
+</html>

@@ -1,0 +1,27 @@
+{{</geminiadmin/admin-layout}}
+{{$subtitle}}Menu{{/subtitle}}
+{{$sub}}{{/sub}}
+{{$adminbody}}
+<h2>Administration Menu</h2>
+
+<div class="admin-menu">
+{{#req.menu}}
+<div class="admin-menu-section">
+  <div class="admin-menu-banner">{{description}}</div>
+  <div class="admin-menu-options">
+    <table border="0" cellpadding="0" cellspacing="0">
+      {{#functions}}
+      <tr>
+        <td class="admin-menu-option-name"><a class="admin-menu-button" href="{{req.baseUri}}{{relativeUri}}">{{functionName}}</a></td>
+        <td class="admin-menu-option-description">{{functionDescription}}</td>
+      </tr>
+      {{/functions}}
+    </table>
+  </div>
+</div>
+{{/req.menu}}
+{{^req.menu}}No administrative functions have been added to the Admin Handler.{{/req.menu}}
+</div>
+
+{{/adminbody}}
+{{//geminiadmin/admin-layout}}

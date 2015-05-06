@@ -1,0 +1,45 @@
+{{</geminiadmin/admin-layout}}
+{{$subtitle}}List {{req.className}}{{/subtitle}}
+{{$sub}}{{#req}}{{>/geminiadmin/cache-subnav}}{{/req}}{{/sub}}
+{{$adminbody}}
+
+{{#req}}
+<h1>List {{className}}</h1>
+
+{{#form}}
+  {{{renderStartWithHiddenElements}}}
+  {{#map}}
+<div class="horizontal-form">
+<ol>
+<li>{{{m}}}<label for="m">Method</label></li>
+<li>{{{v}}}<label for="v">Value to Match</label></li>
+<li>{{{filter}}}</li>
+</ol>
+<div class="clear"></div>
+</div>
+  {{/map}}
+  {{{renderEnd}}}
+{{/form}}
+
+{{^objects.isEmpty}}
+
+{{{paging.render}}}
+<table class="attributes admin-table">
+<tr>
+<th>Identity</th><th>Synopsis</th><th>Update</th><th>View</th>
+</tr>
+{{#objects}}
+  <tr><td class="numeric">{{id}}</td><td>{{.}}</a></td><td><a href="object-update?cid={{className}}&id={{id}}">Update</a></td><td><a href="object-view?cid={{className}}&id={{id}}">View</a></td></tr>
+{{/objects}}
+</table>
+{{{paging.render}}}
+
+{{/objects.isEmpty}}
+{{#objects.isEmpty}}
+  <p>No objects.</p>
+{{/objects.isEmpty}}
+
+{{/req}}
+
+{{/adminbody}}
+{{//geminiadmin/admin-layout}}

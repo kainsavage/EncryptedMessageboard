@@ -8,22 +8,24 @@
 
 package net.teamclerks.em.api.handler;
 
-import java.util.*;
+import java.util.Map;
 
-import net.teamclerks.em.*;
-import net.teamclerks.em.api.form.*;
-import net.teamclerks.em.auth.*;
-import net.teamclerks.em.auth.entity.*;
+import net.teamclerks.em.EMApplication;
+import net.teamclerks.em.EMContext;
+import net.teamclerks.em.api.form.ProfileForm;
+import net.teamclerks.em.auth.EMSecurity;
+import net.teamclerks.em.auth.entity.User;
 
-import org.apache.commons.lang3.*;
+import org.apache.commons.lang3.StringEscapeUtils;
 
-import com.google.common.collect.*;
-import com.techempower.gemini.form.*;
-import com.techempower.gemini.path.*;
-import com.techempower.gemini.path.annotation.*;
+import com.google.common.collect.Maps;
+import com.techempower.gemini.form.FormValidation;
+import com.techempower.gemini.path.MethodUriHandler;
+import com.techempower.gemini.path.annotation.Path;
+import com.techempower.gemini.path.annotation.Post;
 
 public class ProfileHandler
-  extends MethodPathHandler<EMContext>
+  extends MethodUriHandler<EMContext>
 {
   private final EMApplication application;
   private final EMSecurity    security;
@@ -36,8 +38,9 @@ public class ProfileHandler
     this.security = this.application.getSecurity();
   }
   
-  @PathSegment
-  public boolean save()
+  @Path("")
+  @Post
+  public boolean saveProfile()
   {
     final Map<String,Object> json = Maps.newHashMap();
 

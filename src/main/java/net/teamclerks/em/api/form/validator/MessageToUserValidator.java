@@ -1,20 +1,24 @@
 package net.teamclerks.em.api.form.validator;
 
-import java.util.*;
+import java.util.Collection;
 
-import net.teamclerks.em.*;
-import net.teamclerks.em.auth.entity.*;
+import net.teamclerks.em.EMApplication;
+import net.teamclerks.em.api.entity.Friends;
+import net.teamclerks.em.auth.entity.User;
 
-import com.techempower.gemini.form.*;
+import com.techempower.cache.EntityStore;
+import com.techempower.gemini.form.FormElement;
+import com.techempower.gemini.form.FormElementValidator;
+import com.techempower.gemini.form.FormSingleValidation;
 
 public class MessageToUserValidator implements FormElementValidator
 {
-  private final EMStore store;
+  private final EntityStore store;
   private final User sender;
   
   public MessageToUserValidator(User sender)
   {
-    this.store = (EMStore)EMApplication.getInstance().getStore();
+    this.store = EMApplication.getInstance().getStore();
     this.sender = sender;
   }
 
@@ -30,7 +34,7 @@ public class MessageToUserValidator implements FormElementValidator
           "User invalid.");
     }
     
-    final Collection<User> friends = this.store.friends.rightValueList(recipient);
+    final Collection<User> friends = (Collection<User>)this.store.getRelation(Friends.class).rightValueList(recipient.getId());
     
     if(this.sender.isFriendsOnlyMessaging() && !friends.contains(this.sender))
     {
