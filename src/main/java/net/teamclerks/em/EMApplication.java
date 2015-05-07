@@ -8,26 +8,18 @@
 
 package net.teamclerks.em;
 
-import net.teamclerks.em.admin.handler.EMGeminiAdminHandler;
-import net.teamclerks.em.api.handler.MessageHandler;
-import net.teamclerks.em.api.handler.UserHandler;
-import net.teamclerks.em.auth.EMSecurity;
+import net.teamclerks.em.admin.handler.*;
+import net.teamclerks.em.api.handler.*;
+import net.teamclerks.em.auth.*;
 
-import com.techempower.Version;
-import com.techempower.gemini.Dispatcher;
-import com.techempower.gemini.Request;
-import com.techempower.gemini.ResinGeminiApplication;
-import com.techempower.gemini.email.outbound.EmailTemplater;
-import com.techempower.gemini.exceptionhandler.BasicExceptionHandler;
-import com.techempower.gemini.exceptionhandler.NotificationExceptionHandler;
-import com.techempower.gemini.path.DispatchSegment;
-import com.techempower.gemini.path.MethodUriHandler;
-import com.techempower.gemini.path.PathDispatcher;
-import com.techempower.gemini.path.annotation.Path;
-import com.techempower.gemini.pyxis.PyxisSecurity;
-import com.techempower.gemini.pyxis.handler.LoginHandler;
-import com.techempower.gemini.pyxis.handler.LogoutHandler;
-import com.techempower.gemini.pyxis.handler.PasswordResetHandler;
+import com.techempower.*;
+import com.techempower.gemini.*;
+import com.techempower.gemini.email.outbound.*;
+import com.techempower.gemini.exceptionhandler.*;
+import com.techempower.gemini.path.*;
+import com.techempower.gemini.path.annotation.*;
+import com.techempower.gemini.pyxis.*;
+import com.techempower.gemini.pyxis.handler.*;
 
 /**
  * EMApplication.  As a subclass of GeminiApplication, this
@@ -128,6 +120,7 @@ public class EMApplication
             // Normal handlers
             .add("user", new UserHandler(this))
             .add("message", new MessageHandler(this))
+            .add("friend", new FriendHandler(this))
           )
           // Gemini built-in listeners
           .add(getMonitor().getListener())

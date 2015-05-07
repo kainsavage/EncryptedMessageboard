@@ -51,6 +51,11 @@ define(['ko', 'jquery', 'services/user-service', 'services/crypto', 'text!/html/
                         self.errors.push({instruction: data.validation.instructions[i]});
                       }
                     }
+                  })
+                  .fail(function(jqXHR) {
+                    for(var i = 0; i < jqXHR.responseJSON.validation.errors.length; i++) {
+                      self.errors.push({instruction: jqXHR.responseJSON.validation.errors[i]});
+                    }
                   });
                 }
                 else {

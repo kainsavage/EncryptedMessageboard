@@ -85,6 +85,7 @@
         </snapshotRepository>
     </distributionManagement>
     <build>
+        <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
         <plugins>
             <!-- This section is included to allow for minification and concatenation. The 
             warSourceExcludes tag should include all unminified sources that you do not wish

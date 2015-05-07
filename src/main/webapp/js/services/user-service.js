@@ -53,7 +53,8 @@ define(['jquery', 'ko'], function($, ko) {
     return $.ajax({
       type: 'PUT',
       url: '/api/user',
-      data: user
+      data: user,
+      dataType: 'json'
     });
   }
 
