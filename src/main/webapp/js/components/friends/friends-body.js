@@ -11,7 +11,9 @@ define(['ko', 'services/user-service', 'services/friend-service', 'text!/html/co
           self.user(user);
         }
         else {
+          // Shouldnt' even be here if there's no user
           self.user(null);
+          window.location = '/';
         }
       });
 
