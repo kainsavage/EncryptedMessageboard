@@ -21,16 +21,9 @@ import com.google.common.collect.*;
 import com.techempower.gemini.input.*;
 import com.techempower.gemini.input.validator.*;
 import com.techempower.gemini.path.annotation.*;
-import com.techempower.js.*;
-import com.techempower.js.legacy.*;
 
 public class UserHandler extends EMHandler
-{
-  private static final JavaScriptWriter UserWriter = LegacyJavaScriptWriter.custom()
-      .addVisitorFactory(
-          User.class, User.visitorFactory)
-      .build();
-  
+{  
   /**
    * Validator for User edit.
    * @param application
@@ -62,7 +55,7 @@ public class UserHandler extends EMHandler
    */
   public UserHandler(EMApplication application)
   {
-    super(application, "UserHandler", UserWriter);
+    super(application);
   }
   
   ///

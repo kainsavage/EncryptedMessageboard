@@ -8,18 +8,13 @@
 
 package net.teamclerks.em.auth.entity;
 
-import java.util.Map;
+import java.util.*;
 
-import net.teamclerks.em.EMApplication;
+import net.teamclerks.em.*;
 
-import com.google.common.collect.Maps;
-import com.techempower.collection.MutableNamedObjects;
-import com.techempower.data.annotation.CachedEntity;
-import com.techempower.gemini.pyxis.BasicSecurity;
-import com.techempower.gemini.pyxis.BasicWebUser;
-import com.techempower.js.legacy.Visitor;
-import com.techempower.js.legacy.VisitorFactory;
-import com.techempower.js.legacy.Visitors;
+import com.techempower.collection.*;
+import com.techempower.data.annotation.*;
+import com.techempower.gemini.pyxis.*;
 
 /**
  * Represents a user of the EncryptedMessageboard application.  Basic attributes
@@ -35,22 +30,6 @@ import com.techempower.js.legacy.Visitors;
 public class User
      extends BasicWebUser
 {
-  public static final VisitorFactory<User> visitorFactory =
-      new VisitorFactory<User>()
-      {
-        @Override
-        public Visitor visitor(User object)
-        {
-          final Map<String,Object> json = Maps.newHashMap();
-
-          json.put("firstname", object.getUserFirstname());
-          json.put("lastname", object.getUserLastname());
-          json.put("publickey", object.getPublicKey());
-          
-          return Visitors.forMaps().visitor(json);
-        }
-      };
-
   //
   // Member variables.
   //
