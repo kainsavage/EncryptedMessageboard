@@ -5,6 +5,10 @@
   <div class="contentcontainer">
     <h1 class="no-margin">Friends</h1>
 
+    <ul data-bind="foreach: friends">
+      <li data-bind="text: firstname + ' ' + lastname" data-bind="attr: { id: 'friend' + id }"></li>
+    </ul>
+
   </div>
 
 </div>

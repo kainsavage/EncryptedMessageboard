@@ -1,6 +1,11 @@
 package net.teamclerks.em.api.handler;
 
+import java.util.*;
+import java.util.stream.*;
+
 import net.teamclerks.em.*;
+import net.teamclerks.em.api.entity.*;
+import net.teamclerks.em.auth.entity.*;
 
 import com.techempower.gemini.path.annotation.*;
 
@@ -18,6 +23,13 @@ public class FriendHandler extends EMHandler
   @Get
   public boolean getFriends()
   {
+    final User user = app().getSecurity().getUser(context());
+    
+    if (user != null)
+    {
+      return json(store().getRelation(Friends.class).rightValueList(user)
+          .stream().map(u -> u.view()).collect(Collectors.toList()));      
+    }
     return json();
   }
   

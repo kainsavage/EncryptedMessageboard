@@ -25,8 +25,8 @@ import com.techempower.data.annotation.*;
 public class Friends implements EntityRelationDescriptor<User,User>
 {
   @Left
-  User from;
+  User userA;
   
   @Right
-  User to;
+  User userB;
 }

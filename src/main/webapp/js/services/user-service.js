@@ -1,4 +1,4 @@
-define(['jquery', 'ko'], function($, ko) {
+define(['jquery'], function($) {
 
   /**
    * Attempts to log in the user with the given username and password.
@@ -31,14 +31,21 @@ define(['jquery', 'ko'], function($, ko) {
   }
 
   /**
-   * Gets the currently logged in user information from the server.
+   * Gets the user's information from the server.
    *
-   * @return {Promise<Object>} { id: Number, username: String }
+   * @param {Number} userId to fetch or null for logged in user.
+   * @return {Promise<Object>} { id: Number, username: String,
+   *    firstname: String, lastname: String, email: String,
+   *    friendsOnly: Boolean, publicKey: String }
    */
-  function getUser() {
+  function getUser(userId) {
+    var url = '/api/user';
+    if (userId) {
+      url = url + '/' + userId;
+    }
     return $.ajax({
       type: 'GET',
-      url: '/api/user',
+      url: url,
       dataType: 'json'
     });
   }
