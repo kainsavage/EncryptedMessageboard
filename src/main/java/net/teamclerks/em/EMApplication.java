@@ -33,7 +33,6 @@ import com.techempower.gemini.pyxis.handler.*;
  */
 public class EMApplication
      extends ResinGeminiApplication
-//  implements PyxisApplication
 {
 
   //

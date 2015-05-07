@@ -2,16 +2,14 @@ package net.teamclerks.em.api.handler;
 
 import net.teamclerks.em.*;
 
-import com.techempower.gemini.*;
-import com.techempower.gemini.path.*;
 import com.techempower.gemini.path.annotation.*;
 
-public class FriendHandler extends MethodUriHandler<EMContext>
+public class FriendHandler extends EMHandler
 {
   /**
    * Public constructor.
    */
-  public FriendHandler(GeminiApplication app)
+  public FriendHandler(EMApplication app)
   {
     super(app);
   }

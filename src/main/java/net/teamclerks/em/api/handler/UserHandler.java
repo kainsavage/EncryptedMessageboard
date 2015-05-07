@@ -20,13 +20,11 @@ import org.apache.commons.lang3.*;
 import com.google.common.collect.*;
 import com.techempower.gemini.input.*;
 import com.techempower.gemini.input.validator.*;
-import com.techempower.gemini.path.*;
 import com.techempower.gemini.path.annotation.*;
 import com.techempower.js.*;
 import com.techempower.js.legacy.*;
 
-public class UserHandler
-  extends MethodUriHandler<EMContext>
+public class UserHandler extends EMHandler
 {
   private static final JavaScriptWriter UserWriter = LegacyJavaScriptWriter.custom()
       .addVisitorFactory(
@@ -75,7 +73,7 @@ public class UserHandler
   @Get
   public boolean getUser()
   {    
-    final User user = (User) app().getSecurity().getUser(context());
+    final User user = app().getSecurity().getUser(context());
     
     if(user != null)
     {
@@ -105,7 +103,7 @@ public class UserHandler
   {
     final Map<String,Object> json = Maps.newHashMap();
 
-    final User user = (User) app().getSecurity().getUser(context());
+    final User user = app().getSecurity().getUser(context());
     
     if(user != null)
     {
@@ -147,7 +145,7 @@ public class UserHandler
     if (input.passed())
     {
       // Success!
-      User user = (User) app().getSecurity().constructUser();
+      User user = app().getSecurity().constructUser();
       user.initialize();
       user.setUserUsername(input.values().get("username"));
       user.setUserPassword(input.values().get("password"));
@@ -172,7 +170,7 @@ public class UserHandler
   {
     final Map<String,Object> json = Maps.newHashMap();
     
-    final User user = (User) app().getSecurity().getUser(context());
+    final User user = app().getSecurity().getUser(context());
     if(user != null)
     {
       final Collection<User> friends = 

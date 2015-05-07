@@ -1,27 +1,19 @@
 package net.teamclerks.em.api.handler;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import net.teamclerks.em.EMApplication;
-import net.teamclerks.em.EMContext;
-import net.teamclerks.em.api.entity.Message;
-import net.teamclerks.em.api.validator.MessageToUserValidator;
-import net.teamclerks.em.api.validator.PGPMessageValidator;
-import net.teamclerks.em.auth.entity.User;
+import net.teamclerks.em.*;
+import net.teamclerks.em.api.entity.*;
+import net.teamclerks.em.api.validator.*;
+import net.teamclerks.em.auth.entity.*;
 
-import com.google.common.collect.Maps;
-import com.techempower.cache.EntityStore;
-import com.techempower.gemini.input.Input;
-import com.techempower.gemini.input.ValidatorSet;
-import com.techempower.gemini.input.validator.LengthValidator;
-import com.techempower.gemini.path.MethodSegmentHandler;
-import com.techempower.gemini.path.annotation.PathSegment;
+import com.google.common.collect.*;
+import com.techempower.cache.*;
+import com.techempower.gemini.input.*;
+import com.techempower.gemini.input.validator.*;
+import com.techempower.gemini.path.annotation.*;
 
-public class MessageHandler
-     extends MethodSegmentHandler<EMContext>
+public class MessageHandler extends EMHandler
 {
   private final EMApplication application;
   private final EntityStore   store;

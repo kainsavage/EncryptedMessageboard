@@ -14,7 +14,13 @@ define(['ko', 'services/user-service', 'text!/html/components/login/login-body.h
         window.location = '/';
       })
       .fail(function(jqXHR, textStatus){
-        self.validationError(jqXHR.responseJSON.message);
+        if (jqXHR.responseJSON.validation) {
+          self.validationError(jqXHR.responseJSON.validation.errors[0]);
+        }
+        else {
+          // No information supplied
+          self.validationError("You must provide username and password.");
+        }
         self.showValidation(true);
       });
     }
