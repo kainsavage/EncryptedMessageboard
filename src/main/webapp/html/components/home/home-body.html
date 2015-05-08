@@ -30,7 +30,7 @@
     <div id="messageArea">
       <h1>Latest Messages</h1>
       <ul id="latest" data-bind="foreach: latestMessages">
-        <li data-bind="text: message" data-bind="attr: { id: id }"></li>
+        <li><div data-bind="text: message"></div><span data-bind="text: sender.username"></span></li>
       </ul>
     </div>
   </div>

@@ -14,12 +14,14 @@ define(['jquery'], function($) {
   }
   
   /**
-   * Gets the latest messages for the currently logged in user
-   * sent from the given user id.
+   * Gets the message transcript between the user given by userId
+   * and the currently logged in user.
    * 
+   * @param {Number} the userId of the user for whom you would like
+   *                 the message transcript.
    * @return {Promise<Object>} message array
    */
-  function getLatestMessagesFromUser(userId) {
+  function getMessageTranscriptForUser(userId) {
     return $.ajax({
       type: 'GET',
       url: '/api/message/' + userId,
@@ -31,9 +33,15 @@ define(['jquery'], function($) {
    * Attempts to send the given encrypted message to the given
    * user identified by userId.
    * 
+   * @param {Number} the userId to whom you are sending a message.
+   * @param {String} the message encrypted with the public key belonging
+   *                 to the user given by userId.
+   * @param {String} the message encrypted with the public key belonging
+   *                 to the currently logged in user.
+   * @param {String}
    * @return {Promse<Object>} success or validation
    */
-  function sendMessage(userId, encryptedMessage) {
+  function sendMessage(userId, encryptedMessage, encryptedTranscript) {
     return $.ajax({
       type: 'POST',
       url: '/api/message',
@@ -42,6 +50,8 @@ define(['jquery'], function($) {
   }
   
   return {
-    getLatestMessages: getLatestMessages
+    getLatestMessages: getLatestMessages,
+    getMessageTranscriptForUser: getMessageTranscriptForUser,
+    sendMessage: sendMessage
   };
 });

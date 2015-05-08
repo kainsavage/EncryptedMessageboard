@@ -1,6 +1,5 @@
 package net.teamclerks.em.api.handler;
 
-import java.util.*;
 import java.util.stream.*;
 
 import javax.servlet.http.*;
@@ -10,7 +9,6 @@ import net.teamclerks.em.api.collector.*;
 import net.teamclerks.em.api.entity.relation.*;
 import net.teamclerks.em.auth.entity.*;
 
-import com.google.common.collect.*;
 import com.techempower.gemini.path.annotation.*;
 
 public class FriendHandler extends EMHandler
@@ -67,7 +65,6 @@ public class FriendHandler extends EMHandler
   @Post
   public boolean makeFriendshipRequest(int userId)
   {
-    final Map<String,Object> json = Maps.newHashMap();
     final User user = app().getSecurity().getUser(context());
     
     if (user != null)
@@ -94,9 +91,7 @@ public class FriendHandler extends EMHandler
       // Add him as a friend of mine; he will need to accept this at some point.
       store().getRelation(Friends.class).add(user, friend);
       
-      json.put("success", true);
-      
-      return json(json);
+      return json();
     }
 
     return unauthorized("Must be logged in.");
@@ -106,7 +101,6 @@ public class FriendHandler extends EMHandler
   @Put
   public boolean acceptFriendshipRequest(int userId)
   {
-    final Map<String,Object> json = Maps.newHashMap();
     final User user = app().getSecurity().getUser(context());
     
     if (user != null)
@@ -130,9 +124,7 @@ public class FriendHandler extends EMHandler
       // He's already got me as a friend; add him as my friend.
       store().getRelation(Friends.class).add(user, friend);
       
-      json.put("success", true);
-      
-      return json(json);
+      return json();
     }
     
     return unauthorized("Must be logged in.");
@@ -142,7 +134,6 @@ public class FriendHandler extends EMHandler
   @Delete
   public boolean deleteFriend(int userId)
   {
-    final Map<String,Object> json = Maps.newHashMap();
     final User user = app().getSecurity().getUser(context());
     
     if (user != null)
@@ -152,9 +143,7 @@ public class FriendHandler extends EMHandler
       // and remove me from his friends.
       store().getRelation(Friends.class).remove(userId, user);
       
-      json.put("success", true);
-      
-      return json(json);
+      return json();
     }
     
     return unauthorized("Must be logged in.");

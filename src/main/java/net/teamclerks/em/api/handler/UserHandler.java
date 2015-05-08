@@ -8,15 +8,12 @@
 
 package net.teamclerks.em.api.handler;
 
-import java.util.*;
-
 import net.teamclerks.em.*;
 import net.teamclerks.em.api.validator.*;
 import net.teamclerks.em.auth.entity.*;
 
 import org.apache.commons.lang3.*;
 
-import com.google.common.collect.*;
 import com.techempower.gemini.input.*;
 import com.techempower.gemini.input.validator.*;
 import com.techempower.gemini.path.annotation.*;
@@ -86,15 +83,13 @@ public class UserHandler extends EMHandler
       return json(user.restrictedView());
     }
     
-    return json(Maps.newHashMap());
+    return notFound("No such user.");
   }
   
   @Path("")
   @Put
   public boolean editUser()
   {
-    final Map<String,Object> json = Maps.newHashMap();
-
     final User user = app().getSecurity().getUser(context());
     
     if(user != null)
@@ -115,9 +110,7 @@ public class UserHandler extends EMHandler
         
         app().getStore().put(user);
         
-        json.put("success", true);
-        
-        return json(json);
+        return json();
       }
       else
       {
@@ -132,8 +125,6 @@ public class UserHandler extends EMHandler
   @Post
   public boolean registerUser()
   {
-    final Map<String,Object> json = Maps.newHashMap();
-    
     final Input input = this.registerValidator.process(context());
     
     if (input.passed())
@@ -147,14 +138,9 @@ public class UserHandler extends EMHandler
       app().getStore().put(user);
       app().getSecurity().login(context(), user, false);
       
-      json.put("success", true);
-      json.put("redirect", "/profile");
-    }
-    else
-    {
-      return validationFailure(input);
+      return json();
     }
     
-    return json(json);
+    return validationFailure(input);
   }
 }

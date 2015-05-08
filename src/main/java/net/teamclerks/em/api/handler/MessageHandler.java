@@ -9,7 +9,6 @@ import net.teamclerks.em.api.entity.relation.*;
 import net.teamclerks.em.api.validator.*;
 import net.teamclerks.em.auth.entity.*;
 
-import com.google.common.collect.*;
 import com.techempower.gemini.input.*;
 import com.techempower.gemini.input.validator.*;
 import com.techempower.gemini.path.annotation.*;
@@ -37,7 +36,7 @@ public class MessageHandler extends EMHandler
     {
       return json(
         // Get my messages...
-        store().getRelation(UserMessages.class).rightValueList(user).stream()
+        store().getRelation(UserReceivedMessages.class).rightValueList(user).stream()
           // sorted from newest to oldest...
           .sorted(Message.NEWEST_TO_OLDEST)
           // gotten as json.
@@ -49,17 +48,26 @@ public class MessageHandler extends EMHandler
   
   @Path("{userId}")
   @Get
-  public boolean getLatestMessagesFromUser(int userId)
+  public boolean getMessageTranscriptForUser(int userId)
   {
     final User user = app().getSecurity().getUser(context());
     
     if (user != null)
     {
+      List<Message> received = 
+          store().getRelation(UserReceivedMessages.class).rightValueList(user).stream()
+          .filter(m -> m.getSender() == userId)
+          .collect(Collectors.toList());
+      List<Message> sent =
+          store().getRelation(UserSentMessages.class).rightValueList(user).stream()
+          .filter(m -> m.getRecipient() == userId)
+          .collect(Collectors.toList());
+      
+      received.addAll(sent);
+      
       return json(
         // Get my messages...
-        store().getRelation(UserMessages.class).rightValueList(user).stream()
-          // from that user...
-          .filter(m -> m.getSender() == userId)
+        received.stream()
           // sorted from newest to oldest...
           .sorted(Message.NEWEST_TO_OLDEST)
           // gotten as json...
@@ -73,7 +81,6 @@ public class MessageHandler extends EMHandler
   @Post
   public boolean sendMessage()
   {
-    final Map<String,Object> json = Maps.newHashMap();
     final User user = app().getSecurity().getUser(context());    
     
     if(user != null)
@@ -82,19 +89,30 @@ public class MessageHandler extends EMHandler
       
       if(input.passed())
       {
-        final Message message = new Message();
-        message.setCreated(new Date());
-        message.setRead(false);
-        message.setMessage(input.values().get("message"));
-        message.setSender(user.getId());
+        final Date created = new Date();
+        final Received received = new Received();
+        received.setCreated(created);
+        received.setRead(false);
+        received.setMessage(input.values().get("message"));
+        received.setSender(user.getId());
+        // Save the message
+        store().put(received);
+        // Add the message to the recipient's message list.
+        store().getRelation(UserReceivedMessages.class)
+          .add(input.values().getInt("recipient"), received);
         
-        store().put(message);
-        store().getRelation(UserMessages.class)
-          .add(input.values().getInt("recipient"), message);
+        final Sent sent = new Sent();
+        sent.setCreated(created);
+        // You wrote this, so you've read it.
+        sent.setRead(true);
+        sent.setMessage(input.values().get("sent"));
+        sent.setRecipient(input.values().getInt("recipient"));
+        // Save the message
+        store().put(sent);
+        // Add the message to your message list.
+        store().getRelation(UserSentMessages.class).add(user, sent);
         
-        json.put("success", true);
-        
-        return json(json);
+        return json();
       }
       else
       {

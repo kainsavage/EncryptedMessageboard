@@ -7,11 +7,11 @@ import com.techempower.data.*;
 import com.techempower.data.annotation.*;
 
 @Relation
-public class UserMessages implements EntityRelationDescriptor<User, Message>
+public class UserSentMessages implements EntityRelationDescriptor<User, Sent>
 {
   @Left
   User user;
   
   @Right
-  Message message;
+  Sent sent;
 }
