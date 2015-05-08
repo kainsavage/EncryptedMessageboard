@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import net.teamclerks.em.EMApplication;
 import net.teamclerks.em.EMContext;
-import net.teamclerks.em.api.entity.Friends;
+import net.teamclerks.em.api.entity.relation.*;
 import net.teamclerks.em.auth.entity.User;
 
 import com.techempower.cache.EntityStore;

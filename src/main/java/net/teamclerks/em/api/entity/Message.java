@@ -1,50 +1,30 @@
 package net.teamclerks.em.api.entity;
 
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
-import com.google.common.collect.Maps;
-import com.techempower.data.annotation.CachedEntity;
-import com.techempower.js.legacy.Visitor;
-import com.techempower.js.legacy.VisitorFactory;
-import com.techempower.js.legacy.Visitors;
-import com.techempower.util.Identifiable;
+import com.techempower.collection.*;
+import com.techempower.data.annotation.*;
+import com.techempower.helper.*;
+import com.techempower.util.*;
 
 @CachedEntity
 public class Message 
-  implements Identifiable, Comparable<Message>
+  implements Identifiable
 {
-  public static final VisitorFactory<Message> visitorFactory =
-      new VisitorFactory<Message>()
-      {
-        @Override
-        public Visitor visitor(Message object)
-        {
-          final Map<String,Object> json = Maps.newHashMap();
-          
-          json.put("id", object.getId());
-          json.put("read", object.isRead());
-          json.put("message", object.getMessage());
-          json.put("created", object.getCreated());
-          json.put("sender", object.getSender());
-          json.put("recipient", object.getRecipient());
-          
-          return Visitors.forMaps().visitor(json);
-        }
-      };
+  public static final Comparator<Message> NEWEST_TO_OLDEST = new Comparator<Message>()
+  {
+    @Override
+    public int compare(Message o1, Message o2)
+    {
+      return o2.getCreated().compareTo(o1.getCreated());
+    }
+  };
   
   private int     id;
   private boolean read;
   private String  message;
   private Date    created;
   private int     sender;
-  private int     recipient;
-  
-  @Override
-  public int compareTo(Message m)
-  {
-    return this.getCreated().compareTo(m.getCreated());
-  }
 
   @Override
   public int getId()
@@ -98,14 +78,17 @@ public class Message
     this.sender = sender;
   }
 
-  public int getRecipient()
+  /**
+   * Simple public view map.
+   */
+  public final Map<String,Object> view()
   {
-    return recipient;
+    return new MutableNamedObjects()
+      .put("id", this.getId())
+      .put("read", this.isRead())
+      .put("message", this.getMessage())
+      .put("created", DateHelper.STANDARD_TECH_FORMAT.format(this.getCreated()))
+      .put("sender", this.getSender())
+      .asMap();
   }
-
-  public void setRecipient(int recipient)
-  {
-    this.recipient = recipient;
-  }
-
 }

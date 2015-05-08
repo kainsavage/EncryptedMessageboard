@@ -11,7 +11,6 @@ package net.teamclerks.em.api.handler;
 import java.util.*;
 
 import net.teamclerks.em.*;
-import net.teamclerks.em.api.entity.*;
 import net.teamclerks.em.api.validator.*;
 import net.teamclerks.em.auth.entity.*;
 
@@ -73,7 +72,7 @@ public class UserHandler extends EMHandler
       return json(user.view());
     }
     
-    return json(Maps.newHashMap());
+    return unauthorized("Must be logged in.");
   }
   
   @Path("{userId}")
@@ -84,7 +83,7 @@ public class UserHandler extends EMHandler
     
     if(user != null)
     {
-      return json(user.view());
+      return json(user.restrictedView());
     }
     
     return json(Maps.newHashMap());
@@ -117,6 +116,8 @@ public class UserHandler extends EMHandler
         app().getStore().put(user);
         
         json.put("success", true);
+        
+        return json(json);
       }
       else
       {
@@ -124,7 +125,7 @@ public class UserHandler extends EMHandler
       }
     }
     
-    return json(json);
+    return unauthorized("Must be logged in.");
   }
   
   @Path("")
@@ -152,24 +153,6 @@ public class UserHandler extends EMHandler
     else
     {
       return validationFailure(input);
-    }
-    
-    return json(json);
-  }
-  
-  @Path("friends")
-  @Get
-  public boolean getFriends()
-  {
-    final Map<String,Object> json = Maps.newHashMap();
-    
-    final User user = app().getSecurity().getUser(context());
-    if(user != null)
-    {
-      final Collection<User> friends = 
-          app().getStore().getRelation(Friends.class).rightValueList(user.getId());
-      
-      json.put("friends", friends);
     }
     
     return json(json);

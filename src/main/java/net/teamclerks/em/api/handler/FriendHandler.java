@@ -7,7 +7,7 @@ import javax.servlet.http.*;
 
 import net.teamclerks.em.*;
 import net.teamclerks.em.api.collector.*;
-import net.teamclerks.em.api.entity.*;
+import net.teamclerks.em.api.entity.relation.*;
 import net.teamclerks.em.auth.entity.*;
 
 import com.google.common.collect.*;
@@ -32,14 +32,15 @@ public class FriendHandler extends EMHandler
     if (user != null)
     {
       return json(
-          // People who I have as a friend...
-          store().getRelation(Friends.class).rightValueList(user).stream()
+        // People who I have as a friend...
+        store().getRelation(Friends.class).rightValueList(user).stream()
           // and also have me as a friend.
           .filter(u -> store().getRelation(Friends.class).leftValueList(user).contains(u))
           // get the list of JSON.
           .map(u -> u.view()).collect(Collectors.toList()));
     }
-    return json();
+    
+    return unauthorized("Must be logged in.");
   }
   
   @Path("request")
@@ -51,15 +52,15 @@ public class FriendHandler extends EMHandler
     if (user != null)
     {
       return json(
-          // People who have me as a friend...
-          store().getRelation(Friends.class).leftValueList(user).stream()
+        // People who have me as a friend...
+        store().getRelation(Friends.class).leftValueList(user).stream()
           // but whom I do not have as a friend.
           .filter(u -> !store().getRelation(Friends.class).rightValueList(user).contains(u))
           // get the list of JSON.
           .map(u -> u.view()).collect(Collectors.toList()));
     }
     
-    return json();
+    return unauthorized("Must be logged in.");
   }
   
   @Path("{userId}")
@@ -72,8 +73,8 @@ public class FriendHandler extends EMHandler
     if (user != null)
     {
       final User friend =
-          // People who are my friends...
-          store().getRelation(Friends.class).rightValueList(user).stream()
+        // People who are my friends...
+        store().getRelation(Friends.class).rightValueList(user).stream()
           // and have the given userId...
           .filter(u -> u.getId() == userId)
           // get that user.
@@ -94,9 +95,11 @@ public class FriendHandler extends EMHandler
       store().getRelation(Friends.class).add(user, friend);
       
       json.put("success", true);
+      
+      return json(json);
     }
-    
-    return json(json);
+
+    return unauthorized("Must be logged in.");
   }
   
   @Path("request/{userId}")
@@ -109,8 +112,8 @@ public class FriendHandler extends EMHandler
     if (user != null)
     {
       final User friend = 
-          // People who have me as a friend...
-          store().getRelation(Friends.class).leftValueList(user).stream()
+        // People who have me as a friend...
+        store().getRelation(Friends.class).leftValueList(user).stream()
           // but whom I do not have as a friend...
           .filter(u -> !store().getRelation(Friends.class).rightValueList(user).contains(u))
           // and finally, the user in question.
@@ -128,9 +131,11 @@ public class FriendHandler extends EMHandler
       store().getRelation(Friends.class).add(user, friend);
       
       json.put("success", true);
+      
+      return json(json);
     }
     
-    return json(json);
+    return unauthorized("Must be logged in.");
   }
   
   @Path("{userId}")
@@ -148,8 +153,10 @@ public class FriendHandler extends EMHandler
       store().getRelation(Friends.class).remove(userId, user);
       
       json.put("success", true);
+      
+      return json(json);
     }
     
-    return json(json);
+    return unauthorized("Must be logged in.");
   }
 }

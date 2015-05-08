@@ -88,5 +88,17 @@ public class User
       .put("publicKey", this.getPublicKey())
       .asMap();
   }
+  
+  /**
+   * Returns a more restricted view map.
+   */
+  public final Map<String,Object> restrictedView()
+  {
+    return new MutableNamedObjects()
+      .put("id", this.getId())
+      .put("username", this.getUserUsername())
+      .put("publicKey", this.getPublicKey())
+      .asMap();
+  }
 
 }   // End User.
