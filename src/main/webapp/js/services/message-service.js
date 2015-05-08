@@ -45,6 +45,11 @@ define(['jquery'], function($) {
     return $.ajax({
       type: 'POST',
       url: '/api/message',
+      data: {
+        recipient: userId,
+        message: encryptedMessage,
+        sent: encryptedTranscript
+      },
       dataType: 'json'
     });
   }

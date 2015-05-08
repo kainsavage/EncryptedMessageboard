@@ -16,8 +16,10 @@ import com.techempower.gemini.path.annotation.*;
 public class MessageHandler extends EMHandler
 {
   private final ValidatorSet postMessage = new ValidatorSet(
-    new LengthValidator("message", 1, 4096),
-    new PGPMessageValidator("message"),
+      new LengthValidator("message", 1, 4096),
+      new PGPMessageValidator("message"),
+      new LengthValidator("sent", 1, 4096),
+      new PGPMessageValidator("sent"),
     new MessageToUserValidator("recipient")
   );
 

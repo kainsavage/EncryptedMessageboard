@@ -119,6 +119,7 @@ define(['openpgp'],function(openpgp) {
    */
   function saveKey() {
     localStorage[_keyName] = JSON.stringify(_key);
+    console.log(localStorage[_keyName]);
   }
   
   /**
