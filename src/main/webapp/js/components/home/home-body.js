@@ -1,5 +1,5 @@
-define(['ko', 'services/user-service', 'services/message-service', 'text!/html/components/home/home-body.html'], 
-  function(ko, userService, messageService, html) {
+define(['ko', 'services/user-service', 'services/message-service', 'services/crypto', 'text!/html/components/home/home-body.html'], 
+  function(ko, userService, messageService, crypto, html) {
     function HomeBody() {
       var self = this;
       this.user = ko.observable(null);
@@ -9,8 +9,20 @@ define(['ko', 'services/user-service', 'services/message-service', 'text!/html/c
       userService.getUser().done(function(user) {
         if (user.id) {
           self.user(user);
-          messageService.getLatestMessages().done(function(messages) {
-            self.latestMessages(messages);
+          crypto.init(self.user().username);
+          
+          // Get latest messages.
+          messageService.getLatestMessages()
+            .done(function(messages) {
+              for (var i = 0; i < messages.length; i ++) {
+                crypto.decryptMessageWithPrivateKeyArmored(crypto.getKey().privateKeyArmored, messages[i])
+                  .then(function(message) {
+                    self.latestMessages.push(message);
+                  })
+                  .catch(function(data){
+                    // If this isn't present, errors get logged noisily.
+                  });
+              }
           });
         }
         else {

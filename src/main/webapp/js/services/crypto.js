@@ -56,8 +56,9 @@ define(['openpgp'],function(openpgp) {
   }
   
   /**
-   * Attempts to sign the given plaintextMessage with the given privateKeyArmored, encrypt the message+signature with
-   * the given publicKeyArmored, and call the given callback once completed.
+   * Attempts to sign the given plaintextMessage with the given privateKeyArmored, 
+   * encrypt the message+signature with the given publicKeyArmored, and call the 
+   * given callback once completed.
    * @param {String} publicKeyArmored The recipient's openpgp armored public key
    * @param {String} privateKeyArmored The sender's openpgp armored private key
    * @param {String} plaintextMessage The plaintext message to encrypt
@@ -66,30 +67,42 @@ define(['openpgp'],function(openpgp) {
   function encryptMessageWithPublicKeyArmored(publicKeyArmored, privateKeyArmored, plaintextMessage) {
     var publicKey = openpgp.key.readArmored(publicKeyArmored).keys[0],
         privateKey = openpgp.key.readArmored(privateKeyArmored).keys[0];
-    
     return openpgp.signAndEncryptMessage(publicKey, privateKey, plaintextMessage);
   }
   
   /**
-   * Attempts to decrypt the given encryptedMessageArmored with the given privateKeyArmored, and if 
-   * publicKeyArmored is not null verify the signature of the encryptedMessage with the publicKey.
+   * Attempts to decrypt, with the given privateKeyArmored, the given message with an encrypted message 
+   * body, and verify the signature of the encryptedMessage with the publicKey.
    * @param {String} privateKeyArmored The recipient's openpgp armored private key
-   * @param {String} publicKeyarmored The sender's openpgp armored public key
-   * @param {String} encryptedMessageArmored The armored encrypted message
-   * @return {Promise<{text: String, signatures: Array<{keyid: module:type/keyid, valid: Boolean}>}>}
+   * @param {Object<{read: Boolean, id: Number, message: String, sender: Object, created: Date}>} 
+   *                            messageObject object on which the decrypted text is set and resolved.
+   * @return {Promise<{message: String}>}
  *                              decrypted message as as native JavaScript string
  *                              with verified signatures or null if no literal data found
    */
-  function decryptMessageWithPrivateKeyArmored(privateKeyArmored, publicKeyArmored, encryptedMessageArmored) {
+  function decryptMessageWithPrivateKeyArmored(privateKeyArmored, message) {
     var privateKey = openpgp.key.readArmored(privateKeyArmored).keys[0],
         publicKey = null,
-        encryptedMessage = openpgp.message.readArmored(encryptedMessageArmored);
+        encryptedMessage = openpgp.message.readArmored(message.message);
     
-    if(publicKeyArmored !== null && publicKeyArmored !== undefined) {
-      publicKey = openpgp.key.readArmored(publicKeyArmored).keys[0];
+    if(message.sender.publicKey !== null && message.sender.publicKey !== undefined) {
+      publicKey = openpgp.key.readArmored(message.sender.publicKey).keys[0];
     }
     
-    return openpgp.decryptAndVerifyMessage(privateKey, publicKey, encryptedMessage);
+    return new Promise(
+      function(resolve, reject) {
+        openpgp.decryptAndVerifyMessage(privateKey, publicKey, encryptedMessage)
+          .then(function(msg) {
+            message.msg = msg;
+            message.message = msg.text;
+            resolve(message);
+          })
+          .catch(function(data) {
+            console.log(data);
+            reject(data);
+          });
+      }
+    );
   }
   
   /**
@@ -119,7 +132,6 @@ define(['openpgp'],function(openpgp) {
    */
   function saveKey() {
     localStorage[_keyName] = JSON.stringify(_key);
-    console.log(localStorage[_keyName]);
   }
   
   /**

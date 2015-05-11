@@ -13,7 +13,7 @@ define(['ko', 'jquery', 'services/user-service', 'services/crypto', 'text!/html/
       userService.getUser().done(function(user) {
         if (user.id) {
           self.user(user);
-          crypto.init(self.user.username);
+          crypto.init(self.user().username);
           self.publicKeyArmored(self.user().publicKey);
           self.privateKeyArmored(crypto.getKey().privateKeyArmored);
         }

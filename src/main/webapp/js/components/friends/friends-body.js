@@ -18,6 +18,7 @@ define(['ko', 'services/user-service', 'services/friend-service', 'services/mess
       };
       
       this.sendMessage = function() {
+        console.log(self.message());
         crypto.encryptMessageWithPublicKeyArmored(self.publicKey(), crypto.getKey().privateKeyArmored, self.message())
           .then(function(encryptedMessage) {
             // Great, we need to encrypt our transcript
@@ -25,10 +26,10 @@ define(['ko', 'services/user-service', 'services/friend-service', 'services/mess
               .then(function(encryptedTranscript) {
                 messageService.sendMessage(self.userId(), encryptedMessage, encryptedTranscript)
                 .then(function() {
-                  console.log('success');
+                  self.openModal.close();
                 })
-                .fail(function() {
-                  console.log('failure');
+                .fail(function(err) {
+                  console.log(err);
                 });
               });
           });
@@ -38,7 +39,7 @@ define(['ko', 'services/user-service', 'services/friend-service', 'services/mess
       userService.getUser().done(function(user) {
         if (user.id) {
           self.user(user);
-          crypto.init(self.user.username);
+          crypto.init(self.user().username);
         }
         else {
           // Shouldnt' even be here if there's no user

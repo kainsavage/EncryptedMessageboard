@@ -53,3 +53,33 @@ CREATE TABLE `userreceivedmessages` (
     REFERENCES `received` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `received` 
+DROP FOREIGN KEY `sender`;
+ALTER TABLE `received` 
+ADD INDEX `sender_idx` (`sender` ASC);
+ALTER TABLE `received` 
+ADD CONSTRAINT `sender`
+  FOREIGN KEY (`sender`)
+  REFERENCES `user` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE RESTRICT;
+
+ALTER TABLE `sent` 
+DROP FOREIGN KEY `recipient`;
+ALTER TABLE `sent` 
+ADD INDEX `recipient_idx` (`recipient` ASC);
+ALTER TABLE `sent` 
+ADD CONSTRAINT `recipient`
+  FOREIGN KEY (`recipient`)
+  REFERENCES `user` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE RESTRICT;
+  
+ALTER TABLE `usersentmessages` 
+ADD CONSTRAINT `fk_user_sent`
+  FOREIGN KEY (`sent`)
+  REFERENCES `sent` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION;
+
