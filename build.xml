@@ -9,7 +9,7 @@
     |~~~ (The current source code of EncryptedMessageboard and Gemini.)
     
 -->
-<project default="build-zip" name="EncryptedMessageboard">
+<project name="EncryptedMessageboard">
 
   <!-- Give user a chance to override default properties by including a
        build.properties file. -->
