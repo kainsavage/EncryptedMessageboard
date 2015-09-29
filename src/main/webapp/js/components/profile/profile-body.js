@@ -36,10 +36,18 @@ define(['ko', 'jquery', 'services/user-service', 'services/crypto', 'text!/html/
           try {
             crypto.encryptMessageWithPublicKeyArmored(publicKeyArmored, privateKeyArmored, "test")
             .then(function(message) {
-              crypto.decryptMessageWithPrivateKeyArmored(privateKeyArmored, publicKeyArmored, message)
+              var msg = {
+                message: message,
+                sender: {
+                  id: self.user().id,
+                  username: self.user().username,
+                  publicKey: publicKeyArmored
+                }
+              };
+              crypto.decryptMessageWithPrivateKeyArmored(privateKeyArmored, msg)
               .then(function(decrypted) {
-                if(decrypted.text === "test" &&
-                   decrypted.signatures[0].valid) {
+                if(decrypted.message === "test" &&
+                   decrypted.msg.signatures[0].valid) {
                   userService.editUser(self.user())
                   .then(function(data) {
                     if (data.validation) {

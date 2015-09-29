@@ -6,13 +6,12 @@
     <h1 data-bind="if: privateKeyArmored === null">Setup</h1>
     <h1 data-bind="if: privateKeyArmored !== null">Edit</h1>
 
+    <div data-bind="foreach: errors">
+        <div class="alert alert-danger" role="alert" data-bind="text: instruction"></div>
+    </div>
+
     <form class="login-form auto-focus vert-margin40" data-bind="submit: save">
       <div class="form-container centered-400 peach">
-        <div data-bind="foreach: errors">
-          <div class="validation form-row">
-            <div class="validation-instruction" data-bind="text: instruction"></div>
-          </div>
-        </div>
         <div id="success" data-bind="foreach: success">
           <div class="success form-row">
             <div class="validation-instruction" data-bind="text: instruction"></div>
@@ -22,7 +21,8 @@
           <input type="text" disabled="disabled" data-bind="value: user().username" /><label class="label">Username</label>
         </div>
         <div class="form-row">
-          <input type="text" name="firstname" id="firstname" data-bind="value: user().firstname" /><label for="firstname" class="label">First name</label>
+          <label for="firstname" class="label">First name</label>
+          <input type="text" name="firstname" id="firstname" data-bind="value: user().firstname" />
         </div>
         <div class="form-row">
           <input type="text" name="lastname" id="lastname" data-bind="value: user().lastname" /><label for="lastname" class="label">Last name</label>
