@@ -13,7 +13,7 @@ define(['ko', 'jquery', 'services/user-service', 'services/crypto', 'text!/html/
       userService.getUser().done(function(user) {
         if (user.id) {
           self.user(user);
-          crypto.init(self.user.username);
+          crypto.init(self.user().username);
           self.publicKeyArmored(self.user().publicKey);
           self.privateKeyArmored(crypto.getKey().privateKeyArmored);
         }
@@ -42,14 +42,14 @@ define(['ko', 'jquery', 'services/user-service', 'services/crypto', 'text!/html/
                    decrypted.signatures[0].valid) {
                   userService.editUser(self.user())
                   .then(function(data) {
-                    if (data.success) {
-                      self.success.push({instruction: "Profile has been successfully saved."});
-                      crypto.saveKey();
-                    }
-                    else {
+                    if (data.validation) {
                       for(var i = 0; i < data.validation.instructions.length; i++) {
                         self.errors.push({instruction: data.validation.instructions[i]});
                       }
+                    }
+                    else {
+                      self.success.push({instruction: "Profile has been successfully saved."});
+                      crypto.saveKey();
                     }
                   })
                   .fail(function(jqXHR) {

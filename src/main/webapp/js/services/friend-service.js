@@ -12,6 +12,19 @@ define(['jquery'], function($) {
       url: '/api/friend/'
     });
   }
+  
+  /**
+   * Gets all pending friend requests for the
+   * currently logged in user.
+   * 
+   * @return {Promise<Object>}
+   */
+  function getFriendRequests() {
+    return $.ajax({
+      type: 'GET',
+      url: '/api/friend/request'
+    });
+  }
 
   /**
    * Requests that the given user accept a
@@ -19,12 +32,13 @@ define(['jquery'], function($) {
    * user.
    *
    * @param {Number} userId of new friend.
-   * @return {Promise<Object>}
+   * @return {Promise<Object>} { success: Boolean }
    */
   function requestFriendship(userId) {
     return $.ajax({
       type: 'POST',
-      url: '/api/friend/' + userId  
+      url: '/api/friend/request/' + userId,
+      dataType: 'json'
     });
   }
 
@@ -33,12 +47,13 @@ define(['jquery'], function($) {
    * user given by userId.
    *
    * @param {Number} userId of new friend.
-   * @return {Promise<Object>}
+   * @return {Promise<Object>} { success: Boolean }
    */
   function acceptFriendship(userId) {
     return $.ajax({
       type: 'PUT',
-      url: '/api/friend/' + userId
+      url: '/api/friend/request/' + userId,
+      dataType: 'json'
     });
   }
 
@@ -52,7 +67,8 @@ define(['jquery'], function($) {
   function removeFriend(userId) {
     return $.ajax({
       type: 'DELETE',
-      url: '/api/friend/' + userId
+      url: '/api/friend/' + userId,
+      dataType: 'json'
     });
   }
 

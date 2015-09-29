@@ -8,29 +8,18 @@
 
 package net.teamclerks.em.api.handler;
 
-import java.util.*;
-
 import net.teamclerks.em.*;
-import net.teamclerks.em.api.entity.*;
 import net.teamclerks.em.api.validator.*;
 import net.teamclerks.em.auth.entity.*;
 
 import org.apache.commons.lang3.*;
 
-import com.google.common.collect.*;
 import com.techempower.gemini.input.*;
 import com.techempower.gemini.input.validator.*;
 import com.techempower.gemini.path.annotation.*;
-import com.techempower.js.*;
-import com.techempower.js.legacy.*;
 
 public class UserHandler extends EMHandler
-{
-  private static final JavaScriptWriter UserWriter = LegacyJavaScriptWriter.custom()
-      .addVisitorFactory(
-          User.class, User.visitorFactory)
-      .build();
-  
+{  
   /**
    * Validator for User edit.
    * @param application
@@ -62,7 +51,7 @@ public class UserHandler extends EMHandler
    */
   public UserHandler(EMApplication application)
   {
-    super(application, "UserHandler", UserWriter);
+    super(application);
   }
   
   ///
@@ -80,7 +69,7 @@ public class UserHandler extends EMHandler
       return json(user.view());
     }
     
-    return json(Maps.newHashMap());
+    return unauthorized("Must be logged in.");
   }
   
   @Path("{userId}")
@@ -91,18 +80,16 @@ public class UserHandler extends EMHandler
     
     if(user != null)
     {
-      return json(user.view());
+      return json(user.restrictedView());
     }
     
-    return json(Maps.newHashMap());
+    return notFound("No such user.");
   }
   
   @Path("")
   @Put
   public boolean editUser()
   {
-    final Map<String,Object> json = Maps.newHashMap();
-
     final User user = app().getSecurity().getUser(context());
     
     if(user != null)
@@ -123,7 +110,7 @@ public class UserHandler extends EMHandler
         
         app().getStore().put(user);
         
-        json.put("success", true);
+        return json();
       }
       else
       {
@@ -131,15 +118,13 @@ public class UserHandler extends EMHandler
       }
     }
     
-    return json(json);
+    return unauthorized("Must be logged in.");
   }
   
   @Path("")
   @Post
   public boolean registerUser()
   {
-    final Map<String,Object> json = Maps.newHashMap();
-    
     final Input input = this.registerValidator.process(context());
     
     if (input.passed())
@@ -153,32 +138,9 @@ public class UserHandler extends EMHandler
       app().getStore().put(user);
       app().getSecurity().login(context(), user, false);
       
-      json.put("success", true);
-      json.put("redirect", "/profile");
-    }
-    else
-    {
-      return validationFailure(input);
+      return json();
     }
     
-    return json(json);
-  }
-  
-  @Path("friends")
-  @Get
-  public boolean getFriends()
-  {
-    final Map<String,Object> json = Maps.newHashMap();
-    
-    final User user = app().getSecurity().getUser(context());
-    if(user != null)
-    {
-      final Collection<User> friends = 
-          app().getStore().getRelation(Friends.class).rightValueList(user.getId());
-      
-      json.put("friends", friends);
-    }
-    
-    return json(json);
+    return validationFailure(input);
   }
 }

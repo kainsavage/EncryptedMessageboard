@@ -6,7 +6,7 @@
  * EncryptedMessageboard
  */
  
-package net.teamclerks.em.api.entity;
+package net.teamclerks.em.api.entity.relation;
 
 import net.teamclerks.em.auth.entity.*;
 

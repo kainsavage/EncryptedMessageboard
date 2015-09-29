@@ -6,7 +6,6 @@ define(['jquery'], function($) {
    * @param  {String} username
    * @param  {String} password
    * @return {Promise} The promise wrapped around the login call.
-   * @static
    */
   function login(username, password) {
     return $.ajax({
@@ -20,7 +19,7 @@ define(['jquery'], function($) {
   /**
    * Logs the user out.
    *
-   * @return {Promise} The promise wrapped around the logout body.
+   * @return {Promise} The promise wrapped around the logout call.
    */
   function logout() {
     return $.ajax({
