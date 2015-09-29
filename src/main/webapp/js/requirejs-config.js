@@ -8,7 +8,8 @@ var require = {
     browser:     'external/jquery.browser',
     simplemodal: 'external/jquery.simplemodal.1.4.4.min',
     tools:       'external/jquery.tools.min',
-    openpgp:     'external/openpgp.min'
+    openpgp:     'external/openpgp.min',
+    marked:      'external/marked'
   },
   urlArgs: "bust=" + (new Date()).getTime()
 };

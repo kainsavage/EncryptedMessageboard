@@ -1,4 +1,4 @@
-define(['openpgp'],function(openpgp) {
+define(['openpgp','marked'],function(openpgp,marked) {
   'use strict';
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,13 @@ define(['openpgp'],function(openpgp) {
         openpgp.decryptAndVerifyMessage(privateKey, publicKey, encryptedMessage)
           .then(function(msg) {
             message.msg = msg;
-            message.message = msg.text;
+            // Support markdown
+            message.message = marked(msg.text
+                .replace(/&/g,'&amp;')
+                .replace(/</g,'&lt;')
+                .replace(/>/g,'&gt;')
+                .replace(/\"/g, '&quot;')
+                .replace(/\'/g, '&apos;'));
             resolve(message);
           })
           .catch(function(data) {
